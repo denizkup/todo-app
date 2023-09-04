@@ -11,7 +11,6 @@ export async function addTodo(req: Request, res: Response ,next: NextFunction){
     return res.status(response_code).send(result);
 }   
 
-
 export async function listTodo(req: Request, res: Response ,next: NextFunction){
     let response_code = 422;
     const result = await todoService.listTodo();

@@ -1,13 +1,12 @@
-import Todo from "../models/todo.model"
+import Todo from "../models/todo.model";
 import { serviceReturn } from "../types/serviceReturn.type";
 
-async function addTodo(todo):Promise<serviceReturn>{
+async function addTodo(todo:string):Promise<serviceReturn>{
 
-    let result: serviceReturn = {}
+    let result: serviceReturn = {};
     try{
         const new_todo = new Todo({todo:todo})
         const new_todo_result = await new_todo.save()
-        console.log(new_todo_result)
         result.status = true;
         result.message = "Todo added successfuly!";
         result.payload = new_todo_result;
@@ -22,7 +21,7 @@ async function addTodo(todo):Promise<serviceReturn>{
 
 async function listTodo():Promise<serviceReturn>{
 
-    let result: serviceReturn = {}
+    let result: serviceReturn = {};
     try{
         const todo_list = await Todo.find();
         result.status  = true;
@@ -37,11 +36,11 @@ async function listTodo():Promise<serviceReturn>{
     return result;
 }
 
-async function deleteTodo(id):Promise<serviceReturn>{
+async function deleteTodo(_id:string):Promise<serviceReturn>{
 
-    let result: serviceReturn = {}
+    let result: serviceReturn = {};
     try{
-        const delete_todo_result = await Todo.deleteOne({_id:id});
+        await Todo.deleteOne({_id:_id});
         result.status  = true;
         result.message = "Todo deleted successfuly!";
     }
