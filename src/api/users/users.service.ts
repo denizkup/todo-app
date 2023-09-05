@@ -1,5 +1,5 @@
-import User from "../models/user.model";
-import { serviceReturn } from "../types/serviceReturn.type";
+import User from "./users.model";
+import { serviceReturn } from "../../types/serviceReturn.type";
 
 async function addUser(user):Promise<serviceReturn>{
     let result: serviceReturn = {};
@@ -34,16 +34,20 @@ async function addUser(user):Promise<serviceReturn>{
 
 async function getUser(username:string):Promise<serviceReturn>{
     let result: serviceReturn = {};
+    result.status = false;
 
     try{
         const user = await User.find({username:username});
-        result.status = true;
-        result.message = "User getted successfuly!"
-        result.payload = user;
+        if(user.length > 0){
+            result.status = true;
+            result.message = "User getted successfuly!"
+            result.payload = user;
+        }
+        else{
+            result.message = "User not found!"
+        }
     }
     catch(error){
-        console.log(error)
-        result.status = false;
         result.message = "Failed to get user!"
     }
 

@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from 'express';
-import userService from '../services/user.service';
+import userService from './users.service';
 
 export async function addUser(req: Request, res: Response, next: NextFunction) {
     let response_code = 422;
@@ -12,7 +12,7 @@ export async function addUser(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function getUser(req: Request, res: Response, next: NextFunction) {
-    let response_code = 422;
+    let response_code = 404;
     const username = req.params?.username;
 
     const result = await userService.getUser(username);

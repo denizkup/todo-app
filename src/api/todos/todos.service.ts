@@ -1,5 +1,5 @@
-import Todo from "../models/todo.model";
-import { serviceReturn } from "../types/serviceReturn.type";
+import Todo from "./todos.model";
+import { serviceReturn } from "../../types/serviceReturn.type";
 
 async function addTodo(todo:string):Promise<serviceReturn>{
 

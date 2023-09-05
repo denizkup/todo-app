@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from 'express';
-import todoService from '../services/todo.service';
+import todoService from './todos.service';
 
 export async function addTodo(req: Request, res: Response ,next: NextFunction){
     let response_code = 422;
