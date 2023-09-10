@@ -1,9 +1,10 @@
 import { Response, Request, NextFunction } from 'express';
 import userService from './users.service';
+import { UserData } from '../../types/user/userData';
 
-export async function addUser(req: Request, res: Response, next: NextFunction) {
+export async function addUser(req: Request<{},{},UserData>, res: Response, next: NextFunction) {
     let response_code = 422;
-    const new_user = req.body.user;
+    const new_user = req.body;
     const result = await userService.addUser(new_user);
     if(result.status){
         response_code = 200;

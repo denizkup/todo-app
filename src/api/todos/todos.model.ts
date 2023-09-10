@@ -1,10 +1,16 @@
 import mongoose,{Schema} from "mongoose";
-
+import { TodoType } from "../../types/todo.type";
 const TodoSchema:Schema = new Schema({
-    todo: {
+    user_id: {
         type:String,
-        required:true,
-    }
+        required:true
+    },
+    todos: [{
+        context:{
+            type:String,
+            required:true
+        }
+    }]
 })
 
 

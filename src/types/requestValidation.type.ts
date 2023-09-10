@@ -1,9 +1,9 @@
 import { AnyZodObject } from 'zod';
 
-type requestValidator = {
+type requestValidaton = {
   params? : AnyZodObject,
   body?   : AnyZodObject,
   query?  : AnyZodObject,
 }
 
-export default requestValidator; 
+export default requestValidaton; 

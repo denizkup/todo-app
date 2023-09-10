@@ -17,14 +17,18 @@ const UserSchema:Schema = new Schema({
         type:String,
         required:true,
     },
+    password: {
+        type:String,
+        required:true,
+    },
     create_date: {
         type:String,
         required:true,
     },
-    type: {
+    auth_level: {
         type:String,
-        required:true,
-    },
+        required:false,
+    }
 })
 
 export default mongoose.model("User",UserSchema);

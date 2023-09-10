@@ -1,10 +1,12 @@
 import { Response, Request, NextFunction } from 'express';
 import todoService from './todos.service';
+import { sessionManager } from '../../app';
 
 export async function addTodo(req: Request, res: Response ,next: NextFunction){
     let response_code = 422;
-    const new_todo = req.body.todo;
-    const result = await todoService.addTodo(new_todo);
+    const new_todo = req.body.context;
+    const user_data = await sessionManager.getSession(req.cookies?.session_id)
+    const result = await todoService.addTodo(user_data.id,new_todo);
     if(result.status){
         response_code = 200;
     } 
@@ -13,7 +15,8 @@ export async function addTodo(req: Request, res: Response ,next: NextFunction){
 
 export async function listTodo(req: Request, res: Response ,next: NextFunction){
     let response_code = 422;
-    const result = await todoService.listTodo();
+    const user_data = await sessionManager.getSession(req.cookies?.session_id)
+    const result = await todoService.listTodo(user_data.id);
     if(result.status){
         response_code = 200;
     } 
@@ -22,8 +25,9 @@ export async function listTodo(req: Request, res: Response ,next: NextFunction){
 
 export async function deleteTodo(req: Request, res: Response ,next: NextFunction){
     let response_code = 422;
-    const deleted_id = req.params?.id;
-    const result = await todoService.deleteTodo(deleted_id);
+    const todo_id = req.query.id;
+    const user_data = await sessionManager.getSession(req.cookies?.session_id)
+    const result = await todoService.deleteTodo(user_data.id,todo_id);
     if(result.status){
         response_code = 200;
     } 

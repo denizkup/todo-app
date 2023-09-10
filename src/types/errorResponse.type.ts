@@ -1,4 +1,4 @@
-import MessageResponse from "./MessageResponse";
+import MessageResponse from "./messageResponse.type";
 
 type ErrorResponse = MessageResponse & {
     stack?: string;

@@ -1,14 +1,18 @@
 import User from "./users.model";
 import { serviceReturn } from "../../types/serviceReturn.type";
+import hashData from "../../utils/hashData";
+import getCurrentTime from "../../utils/getTime";
 
 async function addUser(user):Promise<serviceReturn>{
     let result: serviceReturn = {};
 
     try{
-        const username_exist = await User.find({username:user.username});
-        const email_exist = await User.find({email:user.email});
+        const username_exist = await User.findOne({username:user.username});
+        const email_exist = await User.findOne({email:user.email});
 
-        if(username_exist.length  === 0 && email_exist.length === 0){
+        if(username_exist === null && email_exist === null){
+            user.password = await hashData.hash(user.password);
+            user.create_date = getCurrentTime();
             const new_user = new User(user)
             await new_user.save()
             result.status = true;
@@ -16,7 +20,7 @@ async function addUser(user):Promise<serviceReturn>{
         }
         else{
             result.status = false;
-            if(username_exist.length > 0){
+            if(username_exist === null){
                 result.message = "User is already exist!"
             }
             else{
@@ -25,6 +29,7 @@ async function addUser(user):Promise<serviceReturn>{
         }
     }
     catch(error){
+        console.log(error)
         result.status = false;
         result.message = "Failed to add new user!"
     }

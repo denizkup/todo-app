@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
-import requestValidator from '../types/requestValidator';
+import requestValidaton from '../types/requestValidation.type';
 
-export default function validateRequest(validators:requestValidator){
+export default function validateRequest(validators:requestValidaton){
     return async(req:Request,res:Response,next:NextFunction) => {
         try{
             if(validators.params){
+                console.log("params validator ", req.params)
                 req.params = await validators.params.parseAsync(req.params)
             }
 
@@ -21,9 +22,23 @@ export default function validateRequest(validators:requestValidator){
         }
         catch(error){
             if(error instanceof ZodError){
-                res.status(422).send("Data in wrong format");
+                let error_message = "undefined_error"
+                let zod_error = JSON.parse(error.message)[0]
+                try{
+                    error_message = zod_error.message
+                }
+                catch(error){
+
+                }
+                if(zod_error.code === "invalid_type"){
+                    error_message = "Wrong paramater"
+                }
+                error_message = process.env.NODE_ENV === 'production' ? 'Wrong data format!' : error_message
+                res.status(422).send({status:false,message:error_message});
             }
-            next(error);
+            else{
+                next(error);
+            }
         }
     };
 }
