@@ -6,12 +6,12 @@ async function addTodo(user_id:string,todo:string):Promise<serviceReturn>{
 
     let result: serviceReturn = {};
     try{
-        const user_todos = await Todo.findOne({user_id:user_id})
-        let result_todos = null
-        let new_todo:TodoType = {context:todo}
+        const user_todos = await Todo.findOne({user_id:user_id});
+        let result_todos = null;
+        let new_todo:TodoType = {context:todo};
         if(user_todos === null){
-            const initialize_todo_list = new Todo({user_id:user_id,todos:[new_todo]})
-            result_todos = await initialize_todo_list.save()
+            const initialize_todo_list = new Todo({user_id:user_id,todos:[new_todo]});
+            result_todos = await initialize_todo_list.save();
         }
         else{
             result_todos = await Todo.findOneAndUpdate({user_id:user_id}, {todos:[...user_todos.todos,new_todo]},{new: true});
@@ -21,7 +21,6 @@ async function addTodo(user_id:string,todo:string):Promise<serviceReturn>{
         result.payload = result_todos.todos || [];
     }
     catch(error){
-        console.log(error)
         result.status = false;
         result.message = "Failed to add new todo!";
     }
@@ -50,10 +49,10 @@ async function deleteTodo(user_id:string,todo_id:string):Promise<serviceReturn>{
 
     let result: serviceReturn = {};
     try{
-        const user_todos = await Todo.findOne({user_id:user_id})
+        const user_todos = await Todo.findOne({user_id:user_id});
         let result_todos = []
         if(user_todos !== null){
-            var filtered_todos = user_todos.todos.filter(item => item._id.valueOf() !== todo_id)
+            var filtered_todos = user_todos.todos.filter(item => item._id.valueOf() !== todo_id);
             if(filtered_todos.length === 0 || filtered_todos.length === user_todos.todos.length){
                 result.status  = false;
                 result.message = "Todo not found!";

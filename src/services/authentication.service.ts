@@ -10,24 +10,24 @@ async function signin(credentials:UserCredentials):Promise<serviceReturn>{
     result.status = false;
 
     try{
-        const user = await User.findOne({username:credentials.username});//TODO FIND OR FINDONE
+        const user = await User.findOne({username:credentials.username});
         if(user){
-            const password_is_true = await hashData.compare(credentials.password,user.password)
+            const password_is_true = await hashData.compare(credentials.password,user.password);
             if(password_is_true){
-                const user_data = {id:user._id.valueOf(),username:user.username,auth_level:user.auth_level } // Looks ugly :/
+                const user_data = {id:user._id.valueOf(),username:user.username,auth_level:user.auth_level };
                 result.status = true;
                 result.payload = user_data;
             }
             else{
-                result.message = "Wrong password!"
+                result.message = "Wrong password!";
             }
         }
         else{
-            result.message = "User not found!"
+            result.message = "User not found!";
         }
     }
     catch(error){
-        result.message = "Failed at signing!"
+        result.message = "Failed at signing!";
     }
 
     return result;

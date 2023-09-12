@@ -21,7 +21,7 @@ app.get("/", (req:Request,res:Response,next:NextFunction) => {
 })
 
 
-app.use("/auth/",authRoutes)
+app.use("/auth/",authRoutes);
 app.use("/api/v1",api);
 
 app.use(notFoundMiddleware);

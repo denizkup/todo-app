@@ -37,12 +37,12 @@ async function addUser(user):Promise<serviceReturn>{
     return result;
 }
 
-async function getUser(username:string):Promise<serviceReturn>{
+async function getUser(user_id:string):Promise<serviceReturn>{
     let result: serviceReturn = {};
     result.status = false;
 
     try{
-        const user = await User.find({username:username});
+        const user = await User.find({_id:user_id});
         if(user.length > 0){
             result.status = true;
             result.message = "User getted successfuly!"

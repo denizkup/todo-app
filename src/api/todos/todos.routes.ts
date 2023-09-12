@@ -13,8 +13,8 @@ router.get("/list",
     todoController.listTodo
 )
 
-router.delete("/delete",
-    validateRequest({query:TodoType.omit({context:true})}),
+router.delete("/delete/:id",
+    validateRequest({params:TodoType.omit({context:true})}),
     todoController.deleteTodo
 )
 

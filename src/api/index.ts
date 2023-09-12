@@ -6,6 +6,6 @@ import authorize from "../middlewares/authorization.middleware";
 const router = express.Router();
 
 router.use('/users', authorize(["ADMIN"]),users);
-router.use("/todos",authorize(), todos)
+router.use("/todos",authorize(), todos);
 
 export default router;

@@ -3,6 +3,7 @@ import authenticationController from "../controllers/authentication.controller";
 import { UserCredentials } from "../types/user/userCredentials";
 import { UserData } from "../types/user/userData";
 import validateRequest from "../middlewares/validateRequest.middleware";
+
 const router:Router = Router()
 
 router.post("/signup",

@@ -9,18 +9,19 @@ export async function addUser(req: Request<{},{},UserData>, res: Response, next:
     if(result.status){
         response_code = 200;
     }
-    return res.status(response_code).send(result)
+    return res.status(response_code).send(result);
 }
 
 export async function getUser(req: Request, res: Response, next: NextFunction) {
+    console.log("getting user")
     let response_code = 404;
-    const username = req.params?.username;
+    const user_id = req.query?.user_id;
 
-    const result = await userService.getUser(username);
+    const result = await userService.getUser(user_id);
     if(result.status){
         response_code = 200;
     }
-    return res.status(response_code).send(result)
+    return res.status(response_code).send(result);
 }
 
 export async function listUser(req: Request, res: Response, next: NextFunction) {
@@ -29,7 +30,7 @@ export async function listUser(req: Request, res: Response, next: NextFunction) 
     if(result.status){
         response_code = 200;
     }
-    return res.status(response_code).send(result)
+    return res.status(response_code).send(result);
 }
 
 export async function deleteUser(req: Request, res: Response, next: NextFunction) {
@@ -39,5 +40,5 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
     if(result.status){
         response_code = 200;
     }
-    return res.status(response_code).send(result)
+    return res.status(response_code).send(result);
 }

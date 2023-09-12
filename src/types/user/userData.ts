@@ -10,6 +10,6 @@ export const UserData = z.object({
     lastname   : z.string({required_error: "LASTNAME_REQUIRED"}).min(2).max(255),
     password   : z.string({required_error: "PASSWORD_REQUIRED"}).min(3).max(255),
     auth_level : z.enum(AUTH_LEVELS)
-})
+});
 
-export type UserData = z.infer<typeof UserData>
+export type UserData = z.infer<typeof UserData>;

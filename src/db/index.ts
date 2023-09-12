@@ -19,6 +19,6 @@ export class DatabaseAdaptor{
             console.error("Failed to connect database! ", error);
         }
 
-        return this.connection
+        return this.connection;
     }
 }

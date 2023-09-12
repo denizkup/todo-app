@@ -8,18 +8,18 @@ const router:Router = Router();
 router.post("/add",
     validateRequest({body:UserData}),
     userController.addUser
-)
+);
 
 router.get("/get",
     userController.getUser
-)
+);
 
 router.get("/list",
     userController.listUser
-)
+);
 
 router.delete("/delete/:id",
     userController.deleteUser
-)
+);
 
 export default router;

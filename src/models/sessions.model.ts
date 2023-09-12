@@ -10,6 +10,10 @@ const SessionSchema:Schema = new Schema({
         type: Object,
         required:true,
     },
+    start_time: {
+        type:String,
+        required:true
+    }
 })
 
 export default mongoose.model("Session",SessionSchema);
