@@ -13,18 +13,18 @@ async function addUser(user):Promise<serviceReturn>{
         if(username_exist === null && email_exist === null){
             user.password = await hashData.hash(user.password);
             user.create_date = getCurrentTime();
-            const new_user = new User(user)
-            await new_user.save()
+            const new_user = new User(user);
+            await new_user.save();
             result.status = true;
-            result.message = "User added successfuly!"
+            result.message = "User added successfuly!";
         }
         else{
             result.status = false;
             if(username_exist === null){
-                result.message = "User is already exist!"
+                result.message = "User is already exist!";
             }
             else{
-                result.message = "Email is alreay exist!"
+                result.message = "Email is alreay exist!";
             }
         }
     }
@@ -84,7 +84,7 @@ async function deleteUser(_id:string):Promise<serviceReturn>{
     try{
         await User.deleteOne({_id});
         result.status = true;
-        result.message = "User deleted successfuly!"
+        result.message = "User deleted successfuly!";
     }
     catch(error){
         result.status = false;
