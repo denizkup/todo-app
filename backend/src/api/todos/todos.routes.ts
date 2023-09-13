@@ -9,6 +9,11 @@ router.post("/add",
     todoController.addTodo
 )
 
+router.put("/update",
+    validateRequest({body:TodoType}),
+    todoController.updateTodo
+)
+
 router.get("/list",
     todoController.listTodo
 )

@@ -28,6 +28,35 @@ async function addTodo(user_id:string,todo:string):Promise<serviceReturn>{
     return result;
 }
 
+async function updateTodo(user_id:string,todo_id:string,updated_todo:string):Promise<serviceReturn> {
+    let result: serviceReturn = {};
+    try{
+        const user_todos = await Todo.findOne({user_id:user_id});
+        let updated_todos = user_todos
+        if(user_todos !== null){
+            user_todos.todos.forEach(todo => {
+                if(todo._id.valueOf() === todo_id){
+                    todo.context = updated_todo;
+                }
+            });
+
+            let update_todos = await Todo.findOneAndUpdate({user_id:user_id}, {todos:[...user_todos.todos]},{new: true});
+            result.status  = true;
+            result.message = "Todo updated successfuly!";
+            result.payload = updated_todos.todos || [];
+        }
+        else{
+            result.status  = false;
+            result.message = "Todos not found";
+        }
+    }
+    catch(error){
+        result.status = false;
+        result.message = "Failed to update todo!"
+    }
+    return result;    
+}
+
 async function listTodo(user_id:string):Promise<serviceReturn>{
 
     let result: serviceReturn = {};
@@ -52,7 +81,7 @@ async function deleteTodo(user_id:string,todo_id:string):Promise<serviceReturn>{
         const user_todos = await Todo.findOne({user_id:user_id});
         let result_todos = []
         if(user_todos !== null){
-            var filtered_todos = user_todos.todos.filter(item => item._id.valueOf() !== todo_id);
+            let filtered_todos = user_todos.todos.filter(item => item._id.valueOf() !== todo_id);
             if(filtered_todos.length === 0 || filtered_todos.length === user_todos.todos.length){
                 result.status  = false;
                 result.message = "Todo not found!";
@@ -79,4 +108,4 @@ async function deleteTodo(user_id:string,todo_id:string):Promise<serviceReturn>{
     return result;
 }
 
-export default {addTodo,listTodo,deleteTodo};
+export default {addTodo,updateTodo,listTodo,deleteTodo};

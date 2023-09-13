@@ -11,6 +11,17 @@ export async function addTodo(req: Request, res: Response ,next: NextFunction){
         response_code = 200;
     } 
     return res.status(response_code).send(result);
+}  
+
+export async function updateTodo(req: Request, res: Response ,next: NextFunction){
+    let response_code = 422;
+    const updated_todo = req.body;
+    const user_data = await sessionManager.getSession(req.cookies?.session_id);
+    const result = await todoService.updateTodo(user_data.id,updated_todo.id,updated_todo.context);
+    if(result.status){
+        response_code = 200;
+    } 
+    return res.status(response_code).send(result);
 }   
 
 export async function listTodo(req: Request, res: Response ,next: NextFunction){
