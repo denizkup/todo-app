@@ -26,7 +26,7 @@ async function signin(req:Request<{},{},UserCredentials>,res:Response,next:NextF
     if(signin_result.status){
         response_code = 200;
         const user_is_alredy_signed_in = await sessionManager.getSession(req.cookies?.session_id);
-        if(user_is_alredy_signed_in === null){
+        if(user_is_alredy_signed_in === null || user_is_alredy_signed_in.id !== signin_result.payload.id){
             const session:SessionType = {session_id:crypto.randomUUID(),
                                          session_data: { id         : signin_result.payload.id, 
                                                          username   : signin_result.payload.username,

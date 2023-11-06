@@ -5,7 +5,7 @@ import { TodoType } from "../../types/todo.type";
 const router:Router = Router();
 
 router.post("/add",
-    validateRequest({body:TodoType.omit({id:true})}),
+    validateRequest({body:TodoType.omit({_id:true,completed:true})}),
     todoController.addTodo
 )
 
@@ -18,8 +18,8 @@ router.get("/list",
     todoController.listTodo
 )
 
-router.delete("/delete/:id",
-    validateRequest({params:TodoType.omit({context:true})}),
+router.delete("/delete/:_id",
+    validateRequest({params:TodoType.omit({context:true,completed:true})}),
     todoController.deleteTodo
 )
 

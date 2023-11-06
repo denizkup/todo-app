@@ -7,12 +7,21 @@ import api from '../api';
 import cookieParser from "cookie-parser"
 import authRoutes from "../routes/authentication.route";
 import Sesssions from "../utils/sessions";
+import cors from "cors";
 
 const dba:Promise<Mongoose|null> = new DatabaseAdaptor(process.env.DATABASE_URL).connect();
+
+const corsOptions  = {
+    credentials:true,
+    origin: ["http://localhost",
+             "http://localhost:5173",
+             ]
+};
 
 const app:Express = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
 export const sessionManager = new Sesssions();
 

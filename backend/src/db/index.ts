@@ -14,6 +14,7 @@ export class DatabaseAdaptor{
             console.log("Waiting for database connection....");
             this.connection = await mongoose.connect(this.database_url);
             console.log("Database connection established successfuly!");
+            
         }
         catch(error){
             console.error("Failed to connect database! ", error);
