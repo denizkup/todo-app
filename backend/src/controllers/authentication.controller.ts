@@ -68,4 +68,20 @@ async function signout(req:Request,res:Response,next:NextFunction) {
 }
 
 
-export default {signup,signin,signout}
+async function verify(req:Request,res:Response,next:NextFunction){
+    let response_code = 401;
+    try{
+        const user_data = await sessionManager.getSession(req.cookies?.session_id);
+        if(user_data){
+            response_code = 200;
+        }
+     
+    }
+    catch(error){
+
+    }
+    res.status(response_code).send();
+
+}
+
+export default {signup,signin,signout,verify}

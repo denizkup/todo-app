@@ -1,139 +1,114 @@
-import * as Yup from 'yup';
-import { withFormik, FormikProps, FormikErrors, Form, Field ,ErrorMessage} from 'formik';
-import { loginRequest,UserCredentials } from '../../services/auth.service';
+import {useEffect,useState} from 'react';
+import {useAuth} from "../../hooks/auth.hook"
 import { useNavigate } from 'react-router-dom';
+import { UserCredentials } from '../../services/auth.service';
 
-// Shape of form values
-interface FormValues {
-  username: string;
-  password: string;
-}
 
-interface OtherProps {
-  message: string;
-}
-
-// Aside: You may see InjectedFormikProps<OtherProps, FormValues> instead of what comes below in older code.. InjectedFormikProps was artifact of when Formik only exported a HoC. It is also less flexible as it MUST wrap all props (it passes them through).
-const InnerForm = (props: OtherProps & FormikProps<FormValues>) => {
-  const { touched, errors, isSubmitting,status } = props;
+const Login = () => {
+  const { authed,login,verify} = useAuth();
+  const [loading,setLoading] = useState(true);
+  const [userdata,setUserdata] = useState({username:"",password:""} as UserCredentials)
+  const [error,setError] = useState(false)
+  const [success,setSuccess] = useState(false)
   const navigate = useNavigate();
 
-  if(status === true) navigate('/todos');
+  useEffect(() => {
+    if(authed) navigate('/')
+    else{
+      verify()
+        .then((result) => {
+          if(result){
+            navigate('/todos')
+          }
+          else{
+            setLoading(false)
+          }
+        })
+        .catch((error)=> {
+        })
+  }
+},[])
 
-  return (
-    <section className="h-screen w-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-      <div className=" h-full px-6 py-24">
-        <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
-          <div className=" h-full flex-row items-center justify-center">
-              <h1 className="text-xl font-bold leading-tight  text-gray-900 md:text-2xl dark:text-white text-center m-10">
-                  Sign in to your account
-              </h1>
-              <Form>
-                <div className='flex flex-col gap-4'>
-                  <Field type="text" name="username" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                  <div>
-                    <ErrorMessage name="username" component="div" className="text-slate-900 dark:text-slate-200" />
-                  </div>
+  async function loginSubmit(e) {
+    e.preventDefault()
+    await login({ username:userdata.username, password:userdata.password } as UserCredentials)
+        .then((response) => {
+            if(response){
+              // navigate("/")
+              setSuccess(true)
+              setTimeout(() => navigate('/'), 1500);
+
+            }
+            else{
+              setError(true)
+              setUserdata((prevState) => ({...prevState,password:""}))
+            }
+
+        })
+        .catch((error) => {
+
+        })
+  }
+
+  if(!loading){
+    return(
+      <section className='bg-slate-50 dark:bg-slate-900'>
+        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen'>
+          <p className='text-3xl  font-semibold text-slate-900 dark:text-slate-300 mb-3'> Welcome To Another Stupid Todo App</p>
+          <div className='w-full bg-slate-50 rounded-lg shadow dark:border dark:bg-slate-800 dark:border-slate-700  lg:w-1/2 xl:w-1/3'>
+            <div className='p-6 space-y-4  md:space-y-6 sm:p-8'>
+              <h1 className="text-2xl font-semibold leading-tight tracking-tight text-slate-900  dark:text-white text-center">
+                Sign in to your stupid account</h1>
+              <form className='space-y-4 md:space-y-6' onSubmit={loginSubmit}>
+                <div>
+                  <label htmlFor="username" className='block mb-2 text-sm font-medium text-slate-900 dark:text-slate-300'>Your stupid username</label>
+                  <input type="text" name="userame" id="username"
+                         className='bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600'
+                         onChange={(e) => setUserdata((prevState) =>({...prevState,username:e.target.value}))}
+                         onFocus={() => setError(false)}
+                         value={userdata.username}
+                  />
                 </div>
-                <div className='flex flex-col gap-4'>
-                  <Field type="password" name="password" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                  <div>
-                    <ErrorMessage name="password" component="div" className="text-slate-900 dark:text-slate-200" />
-                  </div>
+                <div>
+                  <label htmlFor='password' className='block mb-2 text-sm font-medium text-slate-900 dark:text-slate-300'>Your stupid password</label>
+                  <input type="password" name="password" id='password'
+                         className='bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600'
+                         onChange={(e) => setUserdata((prevState) =>({...prevState,password:e.target.value}))}
+                         onFocus={() => setError(false)}
+                         value={userdata.password}
+
+
+                  />
                 </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-justify">
-                        <div className="flex items-center h-5">
-                          <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"/>
-                        </div>
-                        <div className="ml-3 text-sm">
-                          <label  className="text-gray-500 dark:text-gray-300">
-                            Remember me
-                          </label>
-                        </div>
-                    </div>
-                    <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                      Forgot password?
-                    </a>
-                  </div>
-                  <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-orange-500 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
-                    Sign in
-                  </button>
-                  {isSubmitting && 
-                  <p>Loading...</p>
+                <div>
+                  {error &&
+                    <p className='flex items-center justify-center text-center text-slate-100 dark:text-slate-300 bg-red-800 rounded-lg mb-2  py-2.5'> Wrong username or password!</p>
                   }
-                  {status === true &&
-                    <p> Giriş başarılı</p>
+                  {success && !error && 
+                    <p className='flex items-center justify-center text-center text-slate-100 dark:text-slate-50 bg-primary-light dark:bg-primary-dark rounded-lg mb-2  py-2.5'> Login is successful!</p>
                   }
-                  {status === false &&
-                    <p> Giriş hatalı!</p>
+                  {!error && !success &&
+                    <button type="submit" className='w-full text-slate-100 bg-teal-500 hover:bg-teal-600 dark:bg-primary-dark rounded-lg px-5 py-2.5 text-center'>
+                      Sign In
+                    </button>
                   }
-                  <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                      Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
-                  </p>
-              </Form>
-            
+                
+                </div>
+              </form>
+  
+            </div>
+  
           </div>
         </div>
-      </div> 
-    </section>
-  );
-};
-
-// The type of props MyForm receives
-interface MyFormProps {
-  initialUsername?: string;
-  message?: string; // if this passed all the way through you might do this or make a union type
+      </section>
+    )
+  }
+  else{
+    <></>
+  }
 }
 
-// Wrap our form with the withFormik HoC
-const MyForm = withFormik<MyFormProps, FormValues>({
-  // Transform outer props into form values
-  mapPropsToValues: props => {
-    return {
-      username: props.initialUsername || '',
-      password: '',
-    };
-  },
-
-  // Add a custom validation function (this can be async too!)
-  validate: (values: FormValues) => {
-    let errors: FormikErrors<FormValues> = {};
-    if (!values.username) {
-      errors.username = 'Lütfen kullanıcı adını giriniz!';
-    } 
-    if(!values.password){
-      errors.password = "Lütfen şifrenizi giriniz!"
-    }
-
-    return errors;
-  },
-
-  handleSubmit: async (values,actions) => {
-    // do submitting things
-    console.log("Login => ",values)
-    const credentials = values as UserCredentials;
-    console.log("credentials => ",credentials)
-
-    const res = await loginRequest(credentials)
-    actions.setStatus(res.status)
-    console.log("Res => ",actions)
 
 
-    // if(res.status === false){
-
-    // }
-    // actions.setSubmitting(false)
-
-  },
-})(InnerForm);
-
-// Use <MyForm /> wherevs
-const Login = () => (
-  // const [loginResult,setLoginResult] = useState(null);
-
-  <MyForm />
-
-);
 
 export default Login;

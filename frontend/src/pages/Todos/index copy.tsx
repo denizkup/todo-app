@@ -1,9 +1,9 @@
 import React,{useEffect, useState,useLayoutEffect,useRef} from 'react';
 import { getTodoListService,deleteTodoService,addTodoService,updateTodoService } from '../../services/todo.service';
 import { TodoType } from '../../types/todo.type';
-import {MdDelete,MdLogout,MdRefresh} from 'react-icons/md';
-import {useAuth} from "../../hooks/auth.hook"
-import { useNavigate } from 'react-router-dom';
+import {MdDelete} from 'react-icons/md';
+import { Switch } from "@material-tailwind/react";
+
 
 const MIN_TEXTAREA_HEIGHT = 16  ;
 
@@ -13,10 +13,6 @@ const Todos = () => {
     const [updatedTodo,setUpdatedTodo] = useState<TodoType | null>(null);
     const [hideCompleted,setHideCompleted] = useState<boolean>(false);
     const textareaRef                  = useRef<HTMLTextAreaElement>(null);
-    const {verify,logout}              = useAuth();
-    const navigate                     = useNavigate();
-    const [sync,setSync]               = useState(false);
-    const toggleClass = " transform translate-x-5";
 
     useLayoutEffect(() => {
         if (textareaRef.current != null) {
@@ -39,53 +35,25 @@ const Todos = () => {
                 setTodos(result.payload.todos)
             }
         }
-        verify()
-            .then((result) => {
-                if(result === false){
-                    navigate("/login")
-                }
-                else{
-                    fetchTodos()
-                }
-            })
-            .catch((error) => {
-
-            })
-     
+        fetchTodos()
     },[])
 
 
-    async function signOut(){
-        try{
-            const signout_result = await logout()
-            if(signout_result) navigate("/login")
-
-        }
-        catch(error){
-
-        }
-    }
-
     async function deleteTodoHandler(todo_id:string) {
-        setSync(true);
         const delete_result = await deleteTodoService(todo_id)
         if(delete_result && delete_result.status){
             setTodos(delete_result.payload.todos)
         }
-        setTimeout(() => setSync(false),300)
-
     }
 
     async function addTodoHandler(todo_context:string) {
         if(todo_context.length > 0){
-            setSync(true);
             const add_result = await addTodoService(todo_context)
             if(add_result && add_result.status){
                 setTodos(add_result.payload)
                 setNewTodo("")
             }
         }    
-        setTimeout(() => setSync(false),300)
     }
 
     function onTodoAddSubmit(e: React.FormEvent<HTMLFormElement>){
@@ -134,71 +102,44 @@ const Todos = () => {
 
 
         if(updated_todo){
-            setSync(true);
             const update_result = await updateTodoService(updated_todo)
                 if(update_result && update_result.status){
                     setTodos(update_result.payload)
                     setUpdatedTodo(null);
                 }
-            setTimeout(() => setSync(false),300)
-            
         }
     
     }
 
+
     return(
-        <div className='flex items-start justify-center h-screen bg-slate-100 dark:bg-slate-900 '>
-            <div className='w-1/2 h-screen mt-10 border border-slate-200 rounded-lg shadow p-5 dark:border-slate-800'>
-                <div className='flex items-center justify-between space-x-1'>
-                    <div className='flex space-x-1'>
-                        <div className={"w-12 h-6 flex items-center rounded-full p-1 cursor-pointer" + (!hideCompleted ? ' bg-slate-600 dark:bg-slate-100' : ' bg-primary-light dark:bg-primary-dark')}
-                                onClick={() => {
-                                    setHideCompleted(current => !current)
-                                    
-                                }}>
-                            <div className={"bg-slate-100 dark:bg-slate-800 h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
-                        </div>
-                        <p className='text-slate-900 dark:text-slate-100'>Hide completed todos</p>
-
-                    </div>
-                    <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="w-8 h-8" /></button>
-                </div>
-                <div className='flex items-center justify-center'>
-                    <p className='text-3xl text-center text-black dark:text-slate-100'> Todos </p>
-                    <a className={sync ? "animate-spin" : "invisible"} ><MdRefresh className="w-6 h-6"/></a>
-
-                </div>
+        <div className='flex items-start justify-center h-screen'>
+            <div className='w-1/2 mt-10'>
+                <Switch  color="red" label="Hide completed todos" onChange={() => setHideCompleted(current => !current)} crossOrigin={undefined} ></Switch>
+                <p className='text-3xl text-center text-black'> Todos </p>
                 {todos.map((todo) => {
                     if(!todo.completed  || (!hideCompleted && todo.completed)){
                         return(
-                            <div key={todo._id} className="group flex items-center space-x-2 p-3 m-3 w-auto">
-                                <div className=" flex justify-center items-center">
-                                    <input type="checkbox" className="appearance-none border-2 rounded-md  w-6 h-6 border-teal-500  checked:bg-teal-500 dark:border-teal-700 dark:checked:bg-teal-700"
-                                            checked={todo.completed} id={todo._id}  onChange={completeTodoHandler}  />
-                                    <svg className="fill-current hidden w-4 h-4 text-white pointer-events-none absolute" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
-                                </div>
-
-                                <input type="text" className={` focus:outline-none text-black w-full ${todo.completed ? 'line-through' : ''} bg-transparent  text-slate-900 dark:text-slate-100 sm:text-sm rounded-lg block w-full p-2.5` }  
-                                        id={todo._id} value={todo.context} onChange={updateTodoHandler} onBlur={onTodoUpdateSubmit}  
-                                        disabled={todo.completed}
-                                        onKeyDown={(e) => {if (e.key === "Enter") onTodoUpdateSubmit(e)}}/>
-
-                                <button className="hidden group-hover:block text-secondary-light dark:text-secondary-dark" onClick={() =>deleteTodoHandler(todo._id) }>
-                                    <MdDelete className="w-6 h-6 "/>
-                                </button>
+                            <div key={todo._id} className="group flex items-center justify-start space-x-2 p-3 m-3 w-auto">
+             
+                                        <input type="checkbox" className='text-white' checked={todo.completed} id={todo._id}  onChange={completeTodoHandler}/>
+                                        <input type="text" className={` focus:outline-none text-black w-full ${todo.completed ? 'line-through' : ''}`}  
+                                                id={todo._id} value={todo.context} onChange={updateTodoHandler} onBlur={onTodoUpdateSubmit}  
+                                                onKeyDown={(e) => {if (e.key === "Enter") onTodoUpdateSubmit()}}/>
+                        
+                                <button className="hidden group-hover:block text-black font-bold" onClick={() =>deleteTodoHandler(todo._id) }><MdDelete/></button>
                             </div>
                         )
                     }
                 })}
                 <div >
                     <textarea
-                        className="text-slate-900 dark:text-slate-100 w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none text-center mt-5 caret-slate-100"
+                        className="text-black w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none"
                         value={newTodo}
-                        placeholder='Add new todo '
+                        placeholder='Add new todo'
                         onChange={(e) => setNewTodo(e.target.value)}
                         onKeyDown={(e) => {if (e.key === "Enter") onTodoAddSubmit(e)}}
                         ref={textareaRef}
-                        disabled={sync}
                     />
 
                 </div>

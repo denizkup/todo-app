@@ -20,4 +20,7 @@ router.post("/signout",
             authenticationController.signout
 );
 
+
+router.post("/verify",
+            authenticationController.verify)
 export default router;

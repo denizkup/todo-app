@@ -10,6 +10,7 @@ export async function addTodo(req: Request, res: Response ,next: NextFunction){
     if(result.status){
         response_code = 200;
     } 
+    // setTimeout(()=> {return res.status(response_code).send(result);},4000)
     return res.status(response_code).send(result);
 }  
 
