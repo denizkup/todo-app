@@ -1,7 +1,7 @@
 import React,{useEffect, useState,useLayoutEffect,useRef} from 'react';
 import { getTodoListService,deleteTodoService,addTodoService,updateTodoService } from '../../services/todo.service';
 import { TodoType } from '../../types/todo.type';
-import {MdDelete,MdLogout,MdSync} from 'react-icons/md';
+import {MdDelete,MdLogout,MdSync,MdSyncProblem} from 'react-icons/md';
 import {useAuth} from "../../hooks/auth.hook"
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ const Todos = () => {
     const textareaRef                  = useRef<HTMLTextAreaElement>(null);
     const {verify,logout}              = useAuth();
     const navigate                     = useNavigate();
-    const [sync,setSync]               = useState(false);
+    const [sync,setSync]               = useState({active:false,status:true});
     const toggleClass = " transform translate-x-5";
 
     useLayoutEffect(() => {
@@ -67,25 +67,42 @@ const Todos = () => {
     }
 
     async function deleteTodoHandler(todo_id:string) {
-        setSync(true);
-        const delete_result = await deleteTodoService(todo_id)
-        if(delete_result && delete_result.status){
-            setTodos(delete_result.payload.todos)
+        setSync((prevState) => ({...prevState,active:true}));
+        try{
+            const delete_result = await deleteTodoService(todo_id)
+            if(delete_result && delete_result.status){
+                setTodos(delete_result.payload.todos)
+                setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
+            }
+            else{
+                setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
+
+            }
         }
-        setTimeout(() => setSync(false),300)
+        catch(error){
+            setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
+        }
 
     }
 
     async function addTodoHandler(todo_context:string) {
         if(todo_context.length > 0){
-            setSync(true);
-            const add_result = await addTodoService(todo_context)
-            if(add_result && add_result.status){
-                setTodos(add_result.payload)
-                setNewTodo("")
+            setSync((prevState) => ({...prevState,active:true}));
+            try{
+                const add_result = await addTodoService(todo_context)
+                if(add_result && add_result.status){
+                    setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
+                    setTodos(add_result.payload)
+                    setNewTodo("")
+                }
+                else{
+                    setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
+                }
+            }
+            catch(error){
+                setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
             }
         }    
-        setTimeout(() => setSync(false),300)
     }
 
     function onTodoAddSubmit(e: React.FormEvent<HTMLFormElement>){
@@ -134,14 +151,25 @@ const Todos = () => {
 
 
         if(updated_todo){
-            setSync(true);
-            const update_result = await updateTodoService(updated_todo)
+            setSync((prevState) => ({...prevState,active:true}));
+            try{
+                const update_result = await updateTodoService(updated_todo)
+                console.log("update_result ",update_result)
                 if(update_result && update_result.status){
                     setTodos(update_result.payload)
                     setUpdatedTodo(null);
+                    setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
+    
                 }
-            setTimeout(() => setSync(false),300)
-            
+                else{
+                    setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
+    
+                }
+            }
+            catch(error){
+                setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
+
+            }
         }
     
     }
@@ -163,7 +191,13 @@ const Todos = () => {
                     </div>
                     <div className='flex items-center justify-center space-x-5'>
                         <div className='flex flex-col items-center justify-center'>
-                            <a id="sync" className={sync ? "animate-spin text-slate-100" : "text-slate-700"} ><MdSync className="w-6 h-6"/></a>
+                            <a id="sync" className={sync.active ? "animate-spin text-slate-100" : "text-slate-700"} >
+                                {sync.status ? 
+                                    <MdSync className="w-6 h-6"/>
+                                    :
+                                    <MdSyncProblem className="text-red-500 w-6 h-6"/>
+                                }
+                            </a>
                         </div>
 
                         <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="w-8 h-8" /></button>
@@ -205,7 +239,7 @@ const Todos = () => {
                         onChange={(e) => setNewTodo(e.target.value)}
                         onKeyDown={(e) => {if (e.key === "Enter") onTodoAddSubmit(e)}}
                         ref={textareaRef}
-                        disabled={sync}
+                        disabled={sync.active}
                     />
 
                 </div>
