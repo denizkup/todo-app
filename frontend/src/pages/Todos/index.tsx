@@ -1,7 +1,7 @@
 import React,{useEffect, useState,useLayoutEffect,useRef} from 'react';
 import { getTodoListService,deleteTodoService,addTodoService,updateTodoService } from '../../services/todo.service';
 import { TodoType } from '../../types/todo.type';
-import {MdDelete,MdLogout,MdRefresh} from 'react-icons/md';
+import {MdDelete,MdLogout,MdSync} from 'react-icons/md';
 import {useAuth} from "../../hooks/auth.hook"
 import { useNavigate } from 'react-router-dom';
 
@@ -158,16 +158,23 @@ const Todos = () => {
                                 }}>
                             <div className={"bg-slate-100 dark:bg-slate-800 h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
                         </div>
-                        <p className='text-slate-900 dark:text-slate-100'>Hide completed todos</p>
+                        <p className='text-slate-900 dark:text-slate-100 text-sm'>Hide completed stupid todos</p>
 
                     </div>
-                    <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="w-8 h-8" /></button>
-                </div>
-                <div className='flex items-center justify-center'>
-                    <p className='text-3xl text-center text-black dark:text-slate-100'> Todos </p>
-                    <a className={sync ? "animate-spin" : "invisible"} ><MdRefresh className="w-6 h-6"/></a>
+                    <div className='flex items-center justify-center space-x-5'>
+                        <div className='flex flex-col items-center justify-center'>
+                            <a id="sync" className={sync ? "animate-spin text-slate-100" : "text-slate-700"} ><MdSync className="w-6 h-6"/></a>
+                        </div>
 
+                        <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="w-8 h-8" /></button>
+
+
+                    </div>
                 </div>
+                <p className='text-3xl text-center text-black dark:text-slate-100'> Stupid Todos </p>
+
+                
+        
                 {todos.map((todo) => {
                     if(!todo.completed  || (!hideCompleted && todo.completed)){
                         return(
@@ -194,7 +201,7 @@ const Todos = () => {
                     <textarea
                         className="text-slate-900 dark:text-slate-100 w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none text-center mt-5 caret-slate-100"
                         value={newTodo}
-                        placeholder='Add new todo '
+                        placeholder='Add new stupid todo '
                         onChange={(e) => setNewTodo(e.target.value)}
                         onKeyDown={(e) => {if (e.key === "Enter") onTodoAddSubmit(e)}}
                         ref={textareaRef}
