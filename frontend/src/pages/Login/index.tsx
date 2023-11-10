@@ -6,11 +6,11 @@ import { UserCredentials } from '../../services/auth.service';
 
 const Login = () => {
   const { authed,login,verify} = useAuth();
-  const [loading,setLoading] = useState(true);
+  const [loading,setLoading]   = useState(false);
   const [userdata,setUserdata] = useState({username:"",password:""} as UserCredentials)
-  const [error,setError] = useState(false)
-  const [success,setSuccess] = useState(false)
-  const navigate = useNavigate();
+  const [error,setError]       = useState(false)
+  const [success,setSuccess]   = useState(false)
+  const navigate               = useNavigate();
 
   useEffect(() => {
     if(authed) navigate('/')
@@ -18,7 +18,7 @@ const Login = () => {
       verify()
         .then((result) => {
           if(result){
-            navigate('/todos')
+            navigate('/')
           }
           else{
             setLoading(false)
@@ -34,7 +34,6 @@ const Login = () => {
     await login({ username:userdata.username, password:userdata.password } as UserCredentials)
         .then((response) => {
             if(response){
-              // navigate("/")
               setSuccess(true)
               setTimeout(() => navigate('/'), 1500);
 
@@ -53,8 +52,8 @@ const Login = () => {
   if(!loading){
     return(
       <section className='bg-slate-50 dark:bg-slate-900'>
-        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen'>
-          <p className='text-3xl  font-semibold text-slate-900 dark:text-slate-300 mb-3'> Welcome To Another Stupid Todo App</p>
+        <div className='flex flex-col items-center md:justify-center lg:justify-start lg:py-20 px-6 py-8 space-y-6 mx-auto h-screen'>
+          <p className='text-3xl  font-semibold text-slate-900 dark:text-slate-300 mb-3 text-center'> Welcome To Another Stupid Todo App</p>
           <div className='w-full bg-slate-50 rounded-lg shadow dark:border dark:bg-slate-800 dark:border-slate-700  lg:w-1/2 xl:w-1/3'>
             <div className='p-6 space-y-4  md:space-y-6 sm:p-8'>
               <h1 className="text-2xl font-semibold leading-tight tracking-tight text-slate-900  dark:text-white text-center">
@@ -87,11 +86,10 @@ const Login = () => {
                   {success && !error && 
                     <p className='flex items-center justify-center text-center text-slate-100 dark:text-slate-50 bg-primary-light dark:bg-primary-dark rounded-lg mb-2  py-2.5'> Login is successful!</p>
                   }
-                  {!error && !success &&
-                    <button type="submit" className='w-full text-slate-100 bg-teal-500 hover:bg-teal-600 dark:bg-primary-dark rounded-lg px-5 py-2.5 text-center'>
-                      Sign In
-                    </button>
-                  }
+                  <button type="submit" disabled={error || success} className='w-full text-slate-100 bg-teal-500 disabled:bg-slate-400 dark:disabled:bg-slate-700 hover:bg-teal-600 dark:bg-primary-dark rounded-lg px-5 py-2.5 text-center'>
+                    Sign In
+                  </button>
+                  
                 
                 </div>
               </form>

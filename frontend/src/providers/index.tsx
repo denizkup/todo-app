@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { UserProvider } from "./auth.hook";
+import { UserProvider } from "../hooks/auth.hook";
 
 
 function AppProvider({ children }: PropsWithChildren<{}>){

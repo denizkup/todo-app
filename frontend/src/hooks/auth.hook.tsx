@@ -42,15 +42,9 @@ export const UserProvider= ({ children }: PropsWithChildren<{}>) => {
     async function verify() {
         try{
             const verified = await verifyUser()
-            if(verified){
-                setAuthed(true);
-                return verified
-            }
-            else{
-                setAuthed(false);
-                return false;
-                
-            }
+            setAuthed(verified);
+            return verified
+          
         }
         catch(error){
             setAuthed(false)
@@ -63,7 +57,7 @@ export const UserProvider= ({ children }: PropsWithChildren<{}>) => {
         try{
             const logout_result = await logoutUser()
             setAuthed(false)
-            return true
+            return logout_result
         }
         catch(error){
             throw(error)

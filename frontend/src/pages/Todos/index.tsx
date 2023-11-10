@@ -1,10 +1,9 @@
 import React,{useEffect, useState,useLayoutEffect,useRef} from 'react';
 import { getTodoListService,deleteTodoService,addTodoService,updateTodoService } from '../../services/todo.service';
 import { TodoType } from '../../types/todo.type';
-import {MdDelete,MdLogout,MdSync,MdSyncProblem} from 'react-icons/md';
+import {MdDelete,MdLogout,MdSync,MdSyncProblem,MdDarkMode,MdLightMode} from 'react-icons/md';
 import {useAuth} from "../../hooks/auth.hook"
-import { useNavigate } from 'react-router-dom';
-
+import useChangeTheme from '../../hooks/theme.hook';
 const MIN_TEXTAREA_HEIGHT = 16  ;
 
 const Todos = () => {
@@ -13,11 +12,11 @@ const Todos = () => {
     const [updatedTodo,setUpdatedTodo] = useState<TodoType | null>(null);
     const [hideCompleted,setHideCompleted] = useState<boolean>(false);
     const textareaRef                  = useRef<HTMLTextAreaElement>(null);
-    const {verify,logout}              = useAuth();
-    const navigate                     = useNavigate();
+    const {logout}                     = useAuth();
     const [sync,setSync]               = useState({active:false,status:true});
+    const {theme,changeTheme}         = useChangeTheme()
+    
     const toggleClass = " transform translate-x-5";
-
     useLayoutEffect(() => {
         if (textareaRef.current != null) {
             // Reset height - important to shrink on delete
@@ -32,34 +31,37 @@ const Todos = () => {
        
       }, [newTodo]);
 
-    useEffect(()=>{
-        const fetchTodos = async () => {
+
+    async function fetchTodos() {
+        setSync((prevState) => ({...prevState,active:true}));
+
+        try{
             const result = await getTodoListService();
             if(result.status && result.payload.todos){
                 setTodos(result.payload.todos)
+                setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
+            }
+            else{
+                setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
+
             }
         }
-        verify()
-            .then((result) => {
-                if(result === false){
-                    navigate("/login")
-                }
-                else{
-                    fetchTodos()
-                }
-            })
-            .catch((error) => {
+        catch(error){
+            if(error?.response?.status === 401){
+                signOut()
+            }
+            setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
+        }  
+    }
 
-            })
-     
+    useEffect(()=>{
+        fetchTodos() 
     },[])
 
 
     async function signOut(){
         try{
-            const signout_result = await logout()
-            if(signout_result) navigate("/login")
-
+            await logout()
         }
         catch(error){
 
@@ -154,7 +156,6 @@ const Todos = () => {
             setSync((prevState) => ({...prevState,active:true}));
             try{
                 const update_result = await updateTodoService(updated_todo)
-                console.log("update_result ",update_result)
                 if(update_result && update_result.status){
                     setTodos(update_result.payload)
                     setUpdatedTodo(null);
@@ -175,34 +176,38 @@ const Todos = () => {
     }
 
     return(
-        <div className='flex items-start justify-center h-screen bg-slate-100 dark:bg-slate-900 '>
-            <div className='w-1/2 h-screen mt-10 border border-slate-200 rounded-lg shadow p-5 dark:border-slate-800'>
-                <div className='flex items-center justify-between space-x-1'>
-                    <div className='flex space-x-1'>
-                        <div className={"w-12 h-6 flex items-center rounded-full p-1 cursor-pointer" + (!hideCompleted ? ' bg-slate-600 dark:bg-slate-100' : ' bg-primary-light dark:bg-primary-dark')}
+        <div className='flex items-start justify-center h-full bg-slate-100 dark:bg-slate-900 p-5'>
+            <div className='md:w-3/4 lg:w-1/2 h-screen  border border-slate-200 rounded-lg shadow px-5 py-5 dark:border-slate-800'>
+                <div className='flex items-center justify-between space-x-1 mb-5'>
+                    <div className='flex space-x-1 items-center'>
+                        <div className={"w-12 h-6 flex items-center rounded-full p-1 cursor-pointer" + (!hideCompleted ? ' bg-slate-900 dark:bg-slate-100' : ' bg-primary-light dark:bg-primary-dark')}
                                 onClick={() => {
                                     setHideCompleted(current => !current)
                                     
                                 }}>
-                            <div className={"bg-slate-100 dark:bg-slate-800 h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
+                            <div className={"bg-slate-100 dark:bg-slate-900 h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
                         </div>
-                        <p className='text-slate-900 dark:text-slate-100 text-sm'>Hide completed stupid todos</p>
+                        <p className='text-slate-900 dark:text-slate-100 text-xs'>Hide completed stupid todos</p>
 
                     </div>
                     <div className='flex items-center justify-center space-x-5'>
+                        <button className=" text-slate-900 dark:text-slate-100"  onClick={() => changeTheme()}>
+                            {theme === "dark" 
+                                ? 
+                                <MdDarkMode className="sm:w-5 sm:h-5 md:w-7 md:h-7"/>
+                                :
+                                <MdLightMode className="sm:w-5 sm:h-5 md:w-7 md:h-7"/>   
+                            }
+                        </button>
                         <div className='flex flex-col items-center justify-center'>
-                            <a id="sync" className={sync.active ? "animate-spin text-slate-100" : "text-slate-700"} >
-                                {sync.status ? 
-                                    <MdSync className="w-6 h-6"/>
-                                    :
-                                    <MdSyncProblem className="text-red-500 w-6 h-6"/>
-                                }
-                            </a>
+                            {sync.status ? 
+                                <button disabled={sync.active} onClick={() => fetchTodos()} className={sync.active ? "animate-spin text-slate-700 dark:text-slate-100" : "text-slate-700 dark:text-slate-100"}><MdSync className="sm:w-5 sm:h-5 md:w-7 md:h-7"/></button>
+                                :
+                                <MdSyncProblem className="text-red-500 sm:w-5 sm:h-5 md:w-7 md:h-7"/>
+                            }
                         </div>
-
-                        <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="w-8 h-8" /></button>
-
-
+                  
+                        <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="sm:w-5 sm:h-5 md:w-7 md:h-7" /></button>
                     </div>
                 </div>
                 <p className='text-3xl text-center text-black dark:text-slate-100'> Stupid Todos </p>
@@ -224,7 +229,7 @@ const Todos = () => {
                                         disabled={todo.completed}
                                         onKeyDown={(e) => {if (e.key === "Enter") onTodoUpdateSubmit(e)}}/>
 
-                                <button className="hidden group-hover:block text-secondary-light dark:text-secondary-dark" onClick={() =>deleteTodoHandler(todo._id) }>
+                                <button className="hidden group-hover:block text-orange-500 dark:text-orange-700" onClick={() =>deleteTodoHandler(todo._id) }>
                                     <MdDelete className="w-6 h-6 "/>
                                 </button>
                             </div>
@@ -233,7 +238,8 @@ const Todos = () => {
                 })}
                 <div >
                     <textarea
-                        className="text-slate-900 dark:text-slate-100 w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none text-center mt-5 caret-slate-100"
+                        className="text-slate-900 dark:text-slate-100 w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none text-center mt-5 
+                        caret-slate-900 dark:caret-slate-100"
                         value={newTodo}
                         placeholder='Add new stupid todo '
                         onChange={(e) => setNewTodo(e.target.value)}

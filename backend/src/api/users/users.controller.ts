@@ -13,7 +13,6 @@ export async function addUser(req: Request<{},{},UserData>, res: Response, next:
 }
 
 export async function getUser(req: Request, res: Response, next: NextFunction) {
-    console.log("getting user")
     let response_code = 404;
     const user_id = req.query?.user_id;
 

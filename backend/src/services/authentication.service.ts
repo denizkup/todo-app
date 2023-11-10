@@ -15,7 +15,6 @@ async function signin(credentials:UserCredentials):Promise<serviceReturn>{
             const password_is_true = await hashData.compare(credentials.password,user.password);
             if(password_is_true){
                 const user_data = {id:user._id.valueOf(),username:user.username,auth_level:user.auth_level,user_name:user.name,user_lastname:user.lastname};
-                console.log("userdata => ",user_data)
                 result.status = true;
                 result.payload = user_data;
             }

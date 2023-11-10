@@ -80,6 +80,8 @@ async function verify(req:Request,res:Response,next:NextFunction){
     catch(error){
 
     }
+    // setTimeout(()=> {return res.status(response_code).send()},4000)
+
     res.status(response_code).send();
 
 }
