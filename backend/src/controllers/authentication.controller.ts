@@ -30,6 +30,8 @@ async function signin(req:Request<{},{},UserCredentials>,res:Response,next:NextF
             const session:SessionType = {session_id:crypto.randomUUID(),
                                          session_data: { id         : signin_result.payload.id, 
                                                          username   : signin_result.payload.username,
+                                                         name       : signin_result.payload.user_name,
+                                                         lastname   : signin_result.payload.user_lastname,
                                                          auth_level : signin_result.payload.auth_level
                                                        }
                                         };
@@ -43,7 +45,7 @@ async function signin(req:Request<{},{},UserCredentials>,res:Response,next:NextF
             });
         }
         delete signin_result.payload.id;
-        delete signin_result.payload.auth_level;
+        // delete signin_result.payload.username;
     }
 
     return res.status(response_code).send(signin_result);
@@ -70,9 +72,11 @@ async function signout(req:Request,res:Response,next:NextFunction) {
 
 async function verify(req:Request,res:Response,next:NextFunction){
     let response_code = 401;
+    let user_data:UserData | any = {}
     try{
-        const user_data = await sessionManager.getSession(req.cookies?.session_id);
+        user_data = await sessionManager.getSession(req.cookies?.session_id);
         if(user_data){
+            delete user_data.id
             response_code = 200;
         }
      
@@ -81,8 +85,7 @@ async function verify(req:Request,res:Response,next:NextFunction){
 
     }
     // setTimeout(()=> {return res.status(response_code).send()},4000)
-
-    res.status(response_code).send();
+    res.status(response_code).send(user_data);
 
 }
 

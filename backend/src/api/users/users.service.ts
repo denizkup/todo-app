@@ -1,4 +1,5 @@
 import User from "./users.model";
+import Todo from "../todos/todos.model";
 import { serviceReturn } from "../../types/serviceReturn.type";
 import hashData from "../../utils/hashData";
 import getCurrentTime from "../../utils/getTime";
@@ -64,7 +65,7 @@ async function listUser():Promise<serviceReturn>{
     let result: serviceReturn = {};
 
     try{
-        const user_list = await User.find();
+        const user_list = await User.find().select(['-password']);
         result.status = true;
         result.message = "User list getted successfuly!"
         result.payload = user_list;
@@ -83,6 +84,7 @@ async function deleteUser(_id:string):Promise<serviceReturn>{
 
     try{
         await User.deleteOne({_id});
+        await Todo.deleteOne({user_id:_id});
         result.status = true;
         result.message = "User deleted successfuly!";
     }

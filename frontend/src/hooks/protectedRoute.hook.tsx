@@ -3,8 +3,12 @@ import { useAuth } from './auth.hook';
 import { useEffect,useState} from 'react';
 import Loading from '../pages/Loading';
 
-export function ProtectedRoutes(){
-    const {verify,authed}  = useAuth();
+type allowedAuthLevelType = {
+    auth_level:"USER" | "ADMIN"
+}
+
+export function ProtectedRoutes(allowed_auth_level:allowedAuthLevelType){
+    const {verify,authData}  = useAuth();
     const [loading,setLoading] = useState(true)
     useEffect( ()=>{
         verify()
@@ -17,7 +21,12 @@ export function ProtectedRoutes(){
       }
     ,[])
     if(!loading){
-        return authed ? <Outlet/> : <Navigate to="/login" />
+        if(authData.status === true && allowed_auth_level.auth_level === authData.auth_level){
+            return <Outlet/>
+        }
+        else{
+            return <Navigate to="/login" />
+        }
     }
     return <Loading/>
 }

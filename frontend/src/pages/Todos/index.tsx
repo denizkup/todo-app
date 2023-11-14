@@ -14,9 +14,10 @@ const Todos = () => {
     const textareaRef                  = useRef<HTMLTextAreaElement>(null);
     const {logout}                     = useAuth();
     const [sync,setSync]               = useState({active:false,status:true});
-    const {theme,changeTheme}         = useChangeTheme()
+    const {theme,changeTheme}          = useChangeTheme()
     
     const toggleClass = " transform translate-x-5";
+
     useLayoutEffect(() => {
         if (textareaRef.current != null) {
             // Reset height - important to shrink on delete
@@ -55,6 +56,7 @@ const Todos = () => {
     }
 
     useEffect(()=>{
+        // console.log("userData = ",authData)
         fetchTodos() 
     },[])
 
@@ -191,6 +193,7 @@ const Todos = () => {
 
                     </div>
                     <div className='flex items-center justify-center space-x-5'>
+                        
                         <button className=" text-slate-900 dark:text-slate-100"  onClick={() => changeTheme()}>
                             {theme === "dark" 
                                 ? 
@@ -224,7 +227,7 @@ const Todos = () => {
                                     <svg className="fill-current hidden w-4 h-4 text-white pointer-events-none absolute" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
                                 </div>
 
-                                <input type="text" className={` focus:outline-none text-black w-full ${todo.completed ? 'line-through' : ''} bg-transparent  text-slate-900 dark:text-slate-100 sm:text-sm rounded-lg block w-full p-2.5` }  
+                                <input type="text" className={` focus:outline-none w-full ${todo.completed ? 'line-through' : ''} bg-transparent  text-slate-900 dark:text-slate-100 sm:text-sm rounded-lg block w-full p-2.5` }  
                                         id={todo._id} value={todo.context} onChange={updateTodoHandler} onBlur={onTodoUpdateSubmit}  
                                         disabled={todo.completed}
                                         onKeyDown={(e) => {if (e.key === "Enter") onTodoUpdateSubmit(e)}}/>

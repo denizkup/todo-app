@@ -1,5 +1,7 @@
 import apiClient from "../utils/apiClient.util";
 
+import { authDataType } from "../types/authData.type";
+
 export type UserCredentials = {
     username:string,
     password:string
@@ -15,14 +17,14 @@ export async function loginUser(user:UserCredentials) {
         })
 }
 
-export async function verifyUser() {
-
+export async function verifyUser(){
     return await apiClient().post("auth/verify")
         .then((response) => {
-            return true
+            return response.data
         })
         .catch((error) => {
-            return false;
+            return false
+
         })
     
 }

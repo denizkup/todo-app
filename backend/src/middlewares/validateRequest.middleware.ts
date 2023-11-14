@@ -4,6 +4,7 @@ import requestValidaton from '../types/requestValidation.type';
 
 export default function validateRequest(validators:requestValidaton){
     return async(req:Request,res:Response,next:NextFunction) => {
+        console.log("req.=> ",req.body)
         try{
             if(validators.params){
                 req.params = await validators.params.parseAsync(req.params);
@@ -20,6 +21,7 @@ export default function validateRequest(validators:requestValidaton){
             next();
         }
         catch(error){
+            console.log("lkerjlkejr ",error)
             if(error instanceof ZodError){
                 let error_message = "undefined_error";
                 let zod_error = JSON.parse(error.message)[0];

@@ -11,13 +11,27 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          light:colors.teal[500],
-          dark:colors.teal[700]
+          DEFAULT:colors.teal[500],
+          dark:colors.teal[600],
+          text:colors.gray[600],
+          textDark:colors.gray[100],
+          border:colors.gray[700],
+          borderDark:colors.gray[500]
         },
         secondary: {
-          light:colors.orange[500],
-          dark:colors.orange[700]
+          DEFAULT:colors.amber[500],
+          dark:colors.amber[600]
         },
+        background:{
+          DEFAULT:colors.gray[50],
+          dark:'#0e1320'
+        },
+        foreground:{
+          DEFAULT:colors.gray[50],
+          dark:'#111927'
+        },
+        
+        
         
       }
     },

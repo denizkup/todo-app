@@ -40,12 +40,13 @@ export default class Sesssions {
         }
     }
 
-    async getSession(session_id:string):Promise<any>{
+    async getSession(session_id:string):Promise<SessionType | any>{
         let result = null;
         try{
             const session = await Session.findOne({session_id:session_id});
             if(session !== null){
                 result = session.data;
+                // delete result.id
             }
         }
         catch(error){

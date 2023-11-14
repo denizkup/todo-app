@@ -4,50 +4,54 @@ import { createContext,useContext,useMemo,useState,PropsWithChildren} from "reac
 
 import { verifyUser } from "../services/auth.service";
 import { UserCredentials,loginUser,logoutUser} from "../services/auth.service";
+import { authDataType } from "../types/authData.type";
 
 interface IUserContext{
-    authed:boolean | any,
-    login:(user:UserCredentials) =>  Promise<void | boolean>;
+    authData:authDataType | any,
+    login:(user:UserCredentials) =>  Promise<void | authDataType>;
     verify:() =>  Promise<void | boolean>;
     logout:() =>  Promise<void | boolean>;
 
 
 }
-const UserContext = createContext<IUserContext>({authed:null,verify:async () => {},login:async () => {},logout:async () => {}});
+const UserContext = createContext<IUserContext>({authData:null,verify:async () => {},login:async () => {},logout:async () => {}});
 
 
 export const UserProvider= ({ children }: PropsWithChildren<{}>) => {
-    const [authed,setAuthed] = useState(false);
+    const [authData,setAuthData] = useState<authDataType>({status:false,fullname:"",auth_level:""})
 
 
-    async function login(user:UserCredentials) {
+    async function login(user:UserCredentials):Promise<authDataType> {
         try{
             const login_result = await loginUser(user)
             if(login_result.status){
-                setAuthed(true);
-                return true;
+                const auth_data = {status:login_result.status,fullname:login_result.payload.user_name+" "+login_result.payload.user_lastname,auth_level:login_result.payload.auth_level}
+                setAuthData(auth_data)
+                return auth_data;
             }
             else{
-                setAuthed(false);
-                return false;
+                setAuthData({status:false})
+                return {status:false};
             }
         }
         catch(error){
-            setAuthed(false);
-            return false;
+            setAuthData({status:false})
+            return {status:false};
         }
         
     }
 
     async function verify() {
         try{
-            const verified = await verifyUser()
-            setAuthed(verified);
-            return verified
+            const verify_result = await verifyUser()
+            if(verify_result){
+                setAuthData({status:true,fullname:verify_result.name+" "+verify_result.lastname,auth_level:verify_result.auth_level})
+            }
+            return verify_result
           
         }
         catch(error){
-            setAuthed(false)
+            setAuthData({status:false})
             throw(error)
         }
         
@@ -56,7 +60,7 @@ export const UserProvider= ({ children }: PropsWithChildren<{}>) => {
     async function logout(){
         try{
             const logout_result = await logoutUser()
-            setAuthed(false)
+            setAuthData({status:false})
             return logout_result
         }
         catch(error){
@@ -66,12 +70,12 @@ export const UserProvider= ({ children }: PropsWithChildren<{}>) => {
 
     const context_value = useMemo(
         ()=> ({
-            authed,
             verify,
             login,
-            logout
+            logout,
+            authData
         }),
-        [authed]
+        [authData]
     );
 
     return(
