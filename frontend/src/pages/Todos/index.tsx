@@ -4,6 +4,7 @@ import { TodoType } from '../../types/todo.type';
 import {MdDelete,MdLogout,MdSync,MdSyncProblem,MdDarkMode,MdLightMode} from 'react-icons/md';
 import {useAuth} from "../../hooks/auth.hook"
 import useChangeTheme from '../../hooks/theme.hook';
+
 const MIN_TEXTAREA_HEIGHT = 16  ;
 
 const Todos = () => {
@@ -31,7 +32,6 @@ const Todos = () => {
 
        
       }, [newTodo]);
-
 
     async function fetchTodos() {
         setSync((prevState) => ({...prevState,active:true}));
@@ -129,13 +129,23 @@ const Todos = () => {
     }
 
     async function onTodoUpdateSubmit(e: React.FormEvent<HTMLFormElement>){
-        // e.preventDefault()
+        setSync((prevState) => ({...prevState,active:true}));
+
         document.activeElement.blur();
         if(updatedTodo){
-            const update_result = await updateTodoService(updatedTodo)
-            if(update_result && update_result.status){
-                setTodos(update_result.payload)
-                setUpdatedTodo(null);
+            try{
+                const update_result = await updateTodoService(updatedTodo)
+                if(update_result && update_result.status){
+                    setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
+                    setTodos(update_result.payload)
+                    setUpdatedTodo(null);
+                }
+                else{
+                    setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
+                }
+            }
+            catch(error){
+                setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:false})),300)
             }
         }
     }
@@ -232,7 +242,7 @@ const Todos = () => {
                                         disabled={todo.completed}
                                         onKeyDown={(e) => {if (e.key === "Enter") onTodoUpdateSubmit(e)}}/>
 
-                                <button className="hidden group-hover:block text-orange-500 dark:text-orange-700" onClick={() =>deleteTodoHandler(todo._id) }>
+                                <button className="hidden group-hover:block text-secondary dark:text-secondary-dark" onClick={() =>deleteTodoHandler(todo._id) }>
                                     <MdDelete className="w-6 h-6 "/>
                                 </button>
                             </div>

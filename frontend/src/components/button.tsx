@@ -9,9 +9,11 @@ interface Props {
     const { type = 'button', children, onClick, className = '' ,disabled} = props;
     return (
       <button
-        className={`bg-primary dark:bg-primary-dark text-primary-text
-                   dark:text-primary-textDark font-bold py-2 px-4 rounded 
-                   hover:bg-primary-dark dark:hover:bg-primary
+        className={`${disabled ? "bg-slate-400 dark:bg-slate-700" : "bg-primary dark:bg-primary-dark" }  
+                    text-primary-text dark:text-primary-textDark 
+                    font-bold py-3 px-4 rounded-xl
+                    ${disabled ? "" : "hover:bg-primary-dark dark:hover:bg-primary" }  
+                  
                    focus:outline-none focus:shadow-outline ${className}`}
         type={type}
         onClick={onClick}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { addUserService, deleteUserService, getUserListService } from "../../services/users.service";
 import {userDataType} from "../../types/userData.type"
-import {MdPersonAddAlt1,MdOutlineDelete,MdLogout,MdDarkMode,MdLightMode} from "react-icons/md"
+import {MdPersonAddAlt1,MdDelete,MdLogout,MdDarkMode,MdLightMode} from "react-icons/md"
 import ConfirmDialog from "../../components/confirmDialog";
 import UserAddDialog from "./userAddDialog";
 import {useAuth} from "../../hooks/auth.hook"
@@ -18,9 +18,9 @@ const UserRow = ({idx,user,deleteAction}) => {
             {user.auth_level === "USER" &&
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                     <button type="button" 
-                            className="bg-secondary dark:bg-secondary-dark rounded-lg p-2 text-slate-900 hover:bg-secondary-dark dark:hover:bg-secondary"
+                            className="text-secondary dark:text-secondary-dark"
                             onClick={() => {deleteAction(user._id)}}>
-                            <MdOutlineDelete className="w-5 h-5"/>
+                            <MdDelete className="w-6 h-6"/>
                     </button>
                 </td>
             }
@@ -134,52 +134,9 @@ const Users = () => {
                 Please confirm to delete user "{deleteUserDialog.user?.name}"
             </ConfirmDialog>
             <UserAddDialog title="Add user" open={addUserDialog} onClose={()=>setAddUserDialog(false)}>
-                {/* <div className="flex flex-col items-center justify-center space-y-2 "> */}
-                    <UserAddForm addUserHandler={addUser}/>
-                    {/* <input name="name" className='text-center bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600' placeholder="Name"></input>
-                    <input name="lastname" className='text-center bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600' placeholder="Lastname"></input>
-                    <input name="email" type="email" className='text-center bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600'placeholder="Email"></input>
-                    <input name="username" className='text-center bg-slate-50  border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600' placeholder="Username"></input>
-                    <input name="passowrd" type="password" className='text-center bg-slate-50  border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600' placeholder="Password"></input>
-
-                    <select defaultValue="Choose" placeholder="Auth Level" className=' text-center bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-slate-100 dark:border-slate-600'>
-                        <option value={"USER"}>USER</option>
-                        <option value={"ADMIN"}>ADMIN</option>
-                    </select> */}
-
-                {/* </div> */}
-
+                <UserAddForm addUserHandler={addUser}/>
             </UserAddDialog>
-            {/* <div className="flex flex-col">
-                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                        <div className="overflow-hidden">
-                            <table className="min-w-full text-center text-sm font-light border- ">
-                                <thead className="bg-slate-100 dark:text-slate-900 ">
-                                    <tr>
-                                    <th scope="col" className=" px-6 py-4">Name</th>
-                                    <th scope="col" className=" px-6 py-4">Lastname</th>
-                                    <th scope="col" className=" px-6 py-4">Email</th>
-                                    <th scope="col" className=" px-6 py-4">Auth Level</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {users.map((user,idx) => {
-                                    return (
-                                        <tr key={idx} className="border-b dark:border-neutral-500 ">
-                                            <td className="whitespace-nowrap  px-6 py-4 font-medium">{user.name}</td>
-                                            "<td className="whitespace-nowrap  px-6 py-4">{user.lastname}</td>
-                                            <td className="whitespace-nowrap  px-6 py-4">{user.email}</td>
-                                            <td className="whitespace-nowrap  px-6 py-4">{user.auth_level}</td>
-                                        </tr>
-                                    )
-                                })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
+          
         </div>
     )
 }

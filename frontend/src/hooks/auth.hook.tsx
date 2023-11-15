@@ -1,7 +1,4 @@
 import { createContext,useContext,useMemo,useState,PropsWithChildren} from "react";
-
-// import { useNavigate } from "react-router-dom";
-
 import { verifyUser } from "../services/auth.service";
 import { UserCredentials,loginUser,logoutUser} from "../services/auth.service";
 import { authDataType } from "../types/authData.type";
@@ -25,18 +22,28 @@ export const UserProvider= ({ children }: PropsWithChildren<{}>) => {
         try{
             const login_result = await loginUser(user)
             if(login_result.status){
-                const auth_data = {status:login_result.status,fullname:login_result.payload.user_name+" "+login_result.payload.user_lastname,auth_level:login_result.payload.auth_level}
+                const auth_data = {status:true,
+                                   logged_out:false,
+                                   message:login_result.message,
+                                   fullname:login_result.payload.user_name+" "+login_result.payload.user_lastname,
+                                   auth_level:login_result.payload.auth_level
+                                }
+
                 setAuthData(auth_data)
                 return auth_data;
             }
             else{
-                setAuthData({status:false})
-                return {status:false};
+                const auth_data = {status:false,
+                                   message:login_result.message,
+                                }
+                setAuthData(auth_data)
+                return auth_data;
             }
         }
         catch(error){
-            setAuthData({status:false})
-            return {status:false};
+            const auth_data = {status:false,message:"Unexpected error!"}
+            setAuthData(auth_data)
+            return auth_data;
         }
         
     }
@@ -60,7 +67,7 @@ export const UserProvider= ({ children }: PropsWithChildren<{}>) => {
     async function logout(){
         try{
             const logout_result = await logoutUser()
-            setAuthData({status:false})
+            setAuthData({status:false,logged_out:true})
             return logout_result
         }
         catch(error){

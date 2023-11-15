@@ -16,6 +16,7 @@ async function signin(credentials:UserCredentials):Promise<serviceReturn>{
             if(password_is_true){
                 const user_data = {id:user._id.valueOf(),username:user.username,auth_level:user.auth_level,user_name:user.name,user_lastname:user.lastname};
                 result.status = true;
+                result.message = "Signin is successful"
                 result.payload = user_data;
             }
             else{

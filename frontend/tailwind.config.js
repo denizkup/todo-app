@@ -13,14 +13,16 @@ module.exports = {
         primary: {
           DEFAULT:colors.teal[500],
           dark:colors.teal[600],
-          text:colors.gray[600],
-          textDark:colors.gray[100],
+          text:colors.gray[700],
+          textDark:colors.gray[300],
           border:colors.gray[700],
           borderDark:colors.gray[500]
         },
         secondary: {
           DEFAULT:colors.amber[500],
-          dark:colors.amber[600]
+          dark:colors.amber[600],
+          text:colors.gray[700],
+          textDark:colors.gray[400],
         },
         background:{
           DEFAULT:colors.gray[50],

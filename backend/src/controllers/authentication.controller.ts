@@ -47,8 +47,9 @@ async function signin(req:Request<{},{},UserCredentials>,res:Response,next:NextF
         delete signin_result.payload.id;
         // delete signin_result.payload.username;
     }
+    setTimeout(()=> {return res.status(response_code).send(signin_result)},4000)
 
-    return res.status(response_code).send(signin_result);
+    // return res.status(response_code).send(signin_result);
 
 }
 

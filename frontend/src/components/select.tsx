@@ -16,19 +16,17 @@ type authLevelOption = {
 
 export default function Select(props:SelectProps) {
     const {name,label,options=[],errors,validationSchema,register,required} = props;
-    console.log("options ",options)
-
     return (
         <div className="relative">
-            <select defaultValue="Choose" placeholder="Auth Level"
+            <select defaultValue="Please select" placeholder="Auth Level"
                     {...register(name, validationSchema)}
 
                     className=' block text-center px-2.5 pb-2.5 pt-4 w-full text-md text-gray-900 bg-transparent rounded-lg border border-text-primary
-                    dark:text-primary-textDark dark:border-primary-textDark dark:focus:border-primary-dark focus:outline-none focus:ring-0 focus:border-primary peer'>
-                        <option value="" selected hidden>Please select</option>
+                    dark:text-primary-textDark dark:border-primary-borderDark dark:focus:border-primary-dark focus:outline-none focus:ring-0 focus:border-primary peer'>
+                        <option hidden>Please select</option>
 
-                        {options.map((option) => {
-                            return <option value={option?.value}>{option?.name}</option>
+                        {options.map((option,idx) => {
+                            return <option value={option?.value} key={idx} >{option?.name}</option>
                         })
                         }
             </select>

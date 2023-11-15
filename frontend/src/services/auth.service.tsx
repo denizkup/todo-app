@@ -1,6 +1,5 @@
 import apiClient from "../utils/apiClient.util";
 
-import { authDataType } from "../types/authData.type";
 
 export type UserCredentials = {
     username:string,
@@ -13,7 +12,12 @@ export async function loginUser(user:UserCredentials) {
             return response.data
         })
         .catch((error) => {
-            return error.response.data
+            if(error.code === "ERR_NETWORK"){
+                return {status:false,message:"Network error!"}
+            }
+            else{
+                return error.response.data
+            }
         })
 }
 
@@ -24,7 +28,6 @@ export async function verifyUser(){
         })
         .catch((error) => {
             return false
-
         })
     
 }

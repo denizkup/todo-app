@@ -17,11 +17,11 @@ export default function Input(props:InputProps) {
                        id={name}
                        name={name}
                        {...register(name, validationSchema)}
-                       className="block text-center px-2.5 pb-2.5 pt-4 w-full text-md text-gray-900 bg-transparent rounded-lg border border-text-primary appearance-none 
-                                dark:text-primary-textDark dark:border-primary-textDark dark:focus:border-primary-dark focus:outline-none focus:ring-0 focus:border-primary peer" placeholder="" />
+                       className="block text-center px-2.5 pb-2.5 pt-4 w-full text-md text-primary-text bg-transparent rounded-lg border border-text-primary appearance-none 
+                                dark:text-primary-textDark dark:border-primary-borderDark dark:focus:border-primary-dark focus:outline-none focus:ring-0 focus:border-primary peer" placeholder="" />
     
                 <label htmlFor={name}
-                       className={`absolute text-md text-primary-text duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-foreground dark:bg-foreground-dark px-2 
+                       className={`absolute text-md text-secondary-text dark:text-secondary-textDark duration-300 transform -translate-y-4 scale-75 top-1 z-10 origin-[0] bg-foreground dark:bg-foreground-dark px-2 
                                   peer-focus:px-2 
                                   peer-focus:text-primary
                                   peer-focus:dark:text-primary-dark
