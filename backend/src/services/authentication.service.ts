@@ -10,11 +10,11 @@ async function signin(credentials:UserCredentials):Promise<serviceReturn>{
     result.status = false;
 
     try{
-        const user = await User.findOne({username:credentials.username});
+        const user = await User.findOne({email:credentials.email});
         if(user){
             const password_is_true = await hashData.compare(credentials.password,user.password);
             if(password_is_true){
-                const user_data = {id:user._id.valueOf(),username:user.username,auth_level:user.auth_level,user_name:user.name,user_lastname:user.lastname};
+                const user_data = {id:user._id.valueOf(),email:user.email,auth_level:user.auth_level,user_name:user.name,user_lastname:user.lastname};
                 result.status = true;
                 result.message = "Signin is successful"
                 result.payload = user_data;

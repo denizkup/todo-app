@@ -1,6 +1,7 @@
 import Session from "../models/sessions.model"
 import { SessionType } from "../types/session.type"
-import getCurrentTime from "../utils/getTime";
+import {getCurrentTime,getDiffTime} from "../utils/getTime";
+
 
 export default class Sesssions {
     sessions:{[session_id:string]:SessionType} = {};
@@ -55,6 +56,17 @@ export default class Sesssions {
         }
         finally{
             return result;
+        }
+    }
+
+    async cleanSessions(){
+        try{
+            const date = getDiffTime(1)
+            await Session.deleteMany({'start_time':{'$lte':date}})
+
+        }
+        catch(error){
+
         }
     }
 }

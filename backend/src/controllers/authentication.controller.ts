@@ -29,7 +29,7 @@ async function signin(req:Request<{},{},UserCredentials>,res:Response,next:NextF
         if(user_is_alredy_signed_in === null || user_is_alredy_signed_in.id !== signin_result.payload.id){
             const session:SessionType = {session_id:crypto.randomUUID(),
                                          session_data: { id         : signin_result.payload.id, 
-                                                         username   : signin_result.payload.username,
+                                                         email      : signin_result.payload.email,
                                                          name       : signin_result.payload.user_name,
                                                          lastname   : signin_result.payload.user_lastname,
                                                          auth_level : signin_result.payload.auth_level
@@ -45,9 +45,8 @@ async function signin(req:Request<{},{},UserCredentials>,res:Response,next:NextF
             });
         }
         delete signin_result.payload.id;
-        // delete signin_result.payload.username;
     }
-    setTimeout(()=> {return res.status(response_code).send(signin_result)},4000)
+    setTimeout(()=> {return res.status(response_code).send(signin_result)},1000)
 
     // return res.status(response_code).send(signin_result);
 

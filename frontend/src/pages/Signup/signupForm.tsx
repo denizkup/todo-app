@@ -20,7 +20,7 @@ const formSchema = Yup.object().shape({
     lastname:Yup.string()
         .required("Lastname is requiered")
         .min(2, "Lastname length should be at least 2 characters"),
-
+        
     password: Yup.string()
       .required("Password is required")
       .min(4, "Password length should be at least 4 characters")
@@ -37,16 +37,16 @@ const formSchema = Yup.object().shape({
       .oneOf(["ADMIN","USER"], "Auth level not valid!"),
 });
 
-export default function UserAddForm(props:any) {
+export default function SignupForm(props:any) {
     const { register, handleSubmit, formState: { errors },reset} = useForm({ mode: "onBlur",
                                                                          resolver: yupResolver(formSchema)});
 
-    const {addUserHandler} = props;
+    const {signupHandler} = props;
                                                                     
 
-  const onSubmit = (data:any) => {
-    addUserHandler(data)
-    reset();
+  const onSubmit = async (data:any) => {
+    const res = await signupHandler(data)
+    if(res) reset();
   };
 
   return (
@@ -59,7 +59,7 @@ export default function UserAddForm(props:any) {
             <Input name="cpassword" label="Password Confirm" type="password" errors={errors} register={register} required={true}/>
             <Select name="auth_level" label="Auth Level" errors={errors} register={register} required={true} options={[{value:"USER",name:"User"},{value:"ADMIN",name:"Administrator"}]}/>
             <Button type="submit" disabled={Object.keys(errors).length > 0}>
-                Add
+                Signup
             </Button> 
         </div>
       

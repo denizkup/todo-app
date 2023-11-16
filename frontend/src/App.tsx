@@ -2,8 +2,8 @@ import './App.css'
 import Login from './pages/Login'
 import Todos from './pages/Todos';
 import Users from './pages/Users';
+import Signup from './pages/Signup';
 import useChangeTheme from './hooks/theme.hook';
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ProtectedRoutes } from './hooks/protectedRoute.hook';
 const App = () =>  {
@@ -13,7 +13,9 @@ const App = () =>  {
     <>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/signin" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
           <Route element={<ProtectedRoutes auth_level="USER"/>}>
            <Route path="/" element={<Todos />} />
           </Route>

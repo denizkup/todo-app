@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser"
 import authRoutes from "../routes/authentication.route";
 import Sesssions from "../utils/sessions";
 import cors from "cors";
+import runAtSpecificTimeOfDay from "../utils/timerFunction";
 
 const dba:Promise<Mongoose|null> = new DatabaseAdaptor(process.env.DATABASE_URL).connect();
 
@@ -24,6 +25,8 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 export const sessionManager = new Sesssions();
+
+runAtSpecificTimeOfDay(0,10,() => { sessionManager.cleanSessions()});
 
 app.get("/", (req:Request,res:Response,next:NextFunction) => {
     res.json({message: "Hello from todo-app"});

@@ -8,3 +8,4 @@ export const loginResultType = z.object({
 });
 
 export type loginResultType = z.infer<typeof loginResultType>;
+

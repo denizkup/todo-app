@@ -129,10 +129,9 @@ const Todos = () => {
     }
 
     async function onTodoUpdateSubmit(e: React.FormEvent<HTMLFormElement>){
-        setSync((prevState) => ({...prevState,active:true}));
-
         document.activeElement.blur();
         if(updatedTodo){
+            setSync((prevState) => ({...prevState,active:true}));
             try{
                 const update_result = await updateTodoService(updatedTodo)
                 if(update_result && update_result.status){
@@ -189,62 +188,65 @@ const Todos = () => {
 
     return(
         <div className='flex items-start justify-center h-full bg-slate-100 dark:bg-slate-900 p-5'>
-            <div className='md:w-3/4 lg:w-1/2 h-screen  border border-slate-200 rounded-lg shadow px-5 py-5 dark:border-slate-800'>
-                <div className='flex items-center justify-between space-x-1 mb-5'>
-                    <div className='flex space-x-1 items-center'>
-                        <div className={"w-12 h-6 flex items-center rounded-full p-1 cursor-pointer" + (!hideCompleted ? ' bg-slate-900 dark:bg-slate-100' : ' bg-primary-light dark:bg-primary-dark')}
-                                onClick={() => {
-                                    setHideCompleted(current => !current)
-                                    
-                                }}>
-                            <div className={"bg-slate-100 dark:bg-slate-900 h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
-                        </div>
-                        <p className='text-slate-900 dark:text-slate-100 text-xs'>Hide completed stupid todos</p>
-
-                    </div>
+            <div className='md:w-3/4 lg:w-1/2 h-screen  border border-slate-200 rounded-lg shadow px-5 py-5 dark:border-slate-800 w-full'>
+                <div className='flex items-center justify-end space-x-1 mb-5'>
                     <div className='flex items-center justify-center space-x-5'>
-                        
                         <button className=" text-slate-900 dark:text-slate-100"  onClick={() => changeTheme()}>
                             {theme === "dark" 
                                 ? 
-                                <MdDarkMode className="sm:w-5 sm:h-5 md:w-7 md:h-7"/>
+                                <MdDarkMode className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>
                                 :
-                                <MdLightMode className="sm:w-5 sm:h-5 md:w-7 md:h-7"/>   
+                                <MdLightMode className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>   
                             }
                         </button>
                         <div className='flex flex-col items-center justify-center'>
                             {sync.status ? 
-                                <button disabled={sync.active} onClick={() => fetchTodos()} className={sync.active ? "animate-spin text-slate-700 dark:text-slate-100" : "text-slate-700 dark:text-slate-100"}><MdSync className="sm:w-5 sm:h-5 md:w-7 md:h-7"/></button>
+                                <button disabled={sync.active} onClick={() => fetchTodos()} className={sync.active ? "animate-spin text-slate-700 dark:text-slate-100" : "text-slate-700 dark:text-slate-100"}>
+                                    <MdSync className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>
+                                </button>
                                 :
-                                <MdSyncProblem className="text-red-500 sm:w-5 sm:h-5 md:w-7 md:h-7"/>
+                                <MdSyncProblem className="text-secondary dark:text-secondary-dark xs:w-6 xs:h-6 md:w-7 md:h-7"/>
                             }
                         </div>
                   
-                        <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="sm:w-5 sm:h-5 md:w-7 md:h-7" /></button>
+                        <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="xs:w-6 xs:h-6 md:w-7 md:h-7" /></button>
                     </div>
                 </div>
-                <p className='text-3xl text-center text-black dark:text-slate-100'> Stupid Todos </p>
+                <p className='text-5xl xs:text-3xl text-center text-primary-text dark:text-primary-textDark'> Todos </p>
+                <div className='flex flex-row items-center space-x-1 mb-4 mt-4'>
+                    <div className={"w-12 h-6 flex items-center rounded-full p-1 cursor-pointer" + (!hideCompleted ? ' bg-background-dark dark:bg-background' : ' bg-primary dark:bg-primary-dark')}
+                            onClick={() => {
+                                setHideCompleted(current => !current)
+                            }}>
+                        <div className={"bg-background dark:bg-background-dark h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
+                    </div>
+                    <p className='text-primary-text dark:text-primary-textDark text-xs font-light'>Hide completed todos</p>
 
-                
-        
+                </div>
+
                 {todos.map((todo) => {
                     if(!todo.completed  || (!hideCompleted && todo.completed)){
                         return(
-                            <div key={todo._id} className="group flex items-center space-x-2 p-3 m-3 w-auto">
-                                <div className=" flex justify-center items-center">
-                                    <input type="checkbox" className="appearance-none border-2 rounded-md  w-6 h-6 border-teal-500  checked:bg-teal-500 dark:border-teal-700 dark:checked:bg-teal-700"
-                                            checked={todo.completed} id={todo._id}  onChange={completeTodoHandler}  />
-                                    <svg className="fill-current hidden w-4 h-4 text-white pointer-events-none absolute" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
+                            <div key={todo._id} className="group grid grid-cols-12 items-center">
+                                <div className="col-start-1 col-end-2 ">
+                                    <div className="flex justify-center items-center"> 
+                                        <input type="checkbox" className="appearance-none border-2 rounded-md  w-6 h-6 border-primary checked:bg-primary dark:border-primary-dark dark:checked:bg-primary-dark"
+                                                checked={todo.completed} id={todo._id}  onChange={completeTodoHandler}  />
+                                        <svg className="fill-current hidden w-4 h-4 text-primary-text dark:text-primary-textDark pointer-events-none absolute" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
+                                    </div>
                                 </div>
+                                <div className='col-start-2 col-end-12 '>
+                                    <input type="text" className={`focus:outline-none w-full ${todo.completed ? 'line-through' : ''} bg-transparent  text-primary-text dark:text-primary-textDark xs:text-sm rounded-lg block w-full p-6` }  
+                                            id={todo._id} value={todo.context} onChange={updateTodoHandler} onBlur={onTodoUpdateSubmit}  
+                                            disabled={todo.completed}
+                                            onKeyDown={(e) => {if (e.key === "Enter") onTodoUpdateSubmit(e)}}/>
 
-                                <input type="text" className={` focus:outline-none w-full ${todo.completed ? 'line-through' : ''} bg-transparent  text-slate-900 dark:text-slate-100 sm:text-sm rounded-lg block w-full p-2.5` }  
-                                        id={todo._id} value={todo.context} onChange={updateTodoHandler} onBlur={onTodoUpdateSubmit}  
-                                        disabled={todo.completed}
-                                        onKeyDown={(e) => {if (e.key === "Enter") onTodoUpdateSubmit(e)}}/>
-
-                                <button className="hidden group-hover:block text-secondary dark:text-secondary-dark" onClick={() =>deleteTodoHandler(todo._id) }>
-                                    <MdDelete className="w-6 h-6 "/>
-                                </button>
+                                </div>
+                                <div className='col-start-12 col-end-12'>
+                                    <button className="invisible group-hover:visible text-secondary dark:text-secondary-dark" onClick={() =>deleteTodoHandler(todo._id) }>
+                                        <MdDelete className="xs:w-5 xs:h-5 w-6 h-6 "/>
+                                    </button>
+                                </div>
                             </div>
                         )
                     }
@@ -254,7 +256,7 @@ const Todos = () => {
                         className="text-slate-900 dark:text-slate-100 w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none text-center mt-5 
                         caret-slate-900 dark:caret-slate-100"
                         value={newTodo}
-                        placeholder='Add new stupid todo '
+                        placeholder='Add a new one ... '
                         onChange={(e) => setNewTodo(e.target.value)}
                         onKeyDown={(e) => {if (e.key === "Enter") onTodoAddSubmit(e)}}
                         ref={textareaRef}

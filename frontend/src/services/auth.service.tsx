@@ -1,8 +1,9 @@
+import { userDataType } from "../types/userData.type";
 import apiClient from "../utils/apiClient.util";
 
 
 export type UserCredentials = {
-    username:string,
+    email:string,
     password:string
 }
 
@@ -41,4 +42,15 @@ export async function logoutUser(){
         .catch((error) => {
             return false;
         })
+}
+
+export async function signupUser(userdata:userDataType) {
+    return await apiClient().post("auth/signup",userdata)
+        .then((response) => {
+            return response.data
+        })
+        .catch((error) => {
+            return error.response.data
+        })
+    
 }

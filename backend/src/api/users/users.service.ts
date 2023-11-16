@@ -2,16 +2,15 @@ import User from "./users.model";
 import Todo from "../todos/todos.model";
 import { serviceReturn } from "../../types/serviceReturn.type";
 import hashData from "../../utils/hashData";
-import getCurrentTime from "../../utils/getTime";
+import {getCurrentTime} from "../../utils/getTime";
 
 async function addUser(user):Promise<serviceReturn>{
     let result: serviceReturn = {};
 
     try{
-        const username_exist = await User.findOne({username:user.username});
         const email_exist = await User.findOne({email:user.email});
 
-        if(username_exist === null && email_exist === null){
+        if(email_exist === null){
             user.password = await hashData.hash(user.password);
             user.create_date = getCurrentTime();
             const new_user = new User(user);
@@ -21,12 +20,9 @@ async function addUser(user):Promise<serviceReturn>{
         }
         else{
             result.status = false;
-            if(username_exist === null){
-                result.message = "User is already exist!";
-            }
-            else{
-                result.message = "Email is alreay exist!";
-            }
+    
+            result.message = "Email is already exist!";
+            
         }
     }
     catch(error){

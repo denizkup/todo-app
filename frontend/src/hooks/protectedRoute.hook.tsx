@@ -25,7 +25,7 @@ export function ProtectedRoutes(allowed_auth_level:allowedAuthLevelType){
             return <Outlet/>
         }
         else{
-            return <Navigate to="/login" />
+            return <Navigate to="/signin" />
         }
     }
     return <Loading/>

@@ -1,4 +1,5 @@
 import colors from "tailwindcss/colors"
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
 
@@ -8,6 +9,10 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    screens: {
+      'xs': {'max': '640px'},
+      ...defaultTheme.screens,
+    },
     extend: {
       colors: {
         primary: {
