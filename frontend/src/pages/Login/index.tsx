@@ -74,7 +74,7 @@ const Login = () => {
   };
 
   return(
-      <div className='flex flex-col items-center justify-center w-full lg:justify-start lg:py-32 lg:p-12 space-y-4'>
+      <div className='flex flex-col items-center justify-center w-full lg:justify-start lg:p-12 space-y-4'>
         <p className='text-7xl  font-semibold text-primary-text dark:text-primary-textDark text-center'> Hello!</p>
         <p className='text-md font-medium text-primary-text dark:text-primary-textDark text-center'> Sign in to your account</p>
 
