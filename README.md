@@ -1,5 +1,5 @@
 # Todo app with backend and user authentication
-This is a simple todo app with backend to authentication and save todos. I'm just trying to learn typescript,react and nodejs essentials by doing this project.
+This is a simple todo app with backend for authentication and save todos. I'm just trying to learn typescript,react and nodejs essentials by doing this project.
 
 ### Screenshots
 <div style="display:flex align-items:center justify-content:center ">
