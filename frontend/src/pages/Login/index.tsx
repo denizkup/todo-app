@@ -74,12 +74,11 @@ const Login = () => {
   };
 
   return(
-    <section className='bg-background dark:bg-background-dark h-screen'>
-      <div className='flex flex-col items-center justify-center h-screen xs:p-4 xs:py-0 lg:justify-start lg:py-32 lg:p-12 space-y-4'>
+      <div className='flex flex-col items-center justify-center w-full lg:justify-start lg:py-32 lg:p-12 space-y-4'>
         <p className='text-7xl  font-semibold text-primary-text dark:text-primary-textDark text-center'> Hello!</p>
         <p className='text-md font-medium text-primary-text dark:text-primary-textDark text-center'> Sign in to your account</p>
 
-        <div className='bg-foreground rounded-xl shadow-xl dark:bg-foreground-dark w-4/5 lg:w-2/3 xl:w-1/3'>
+        <div className='bg-foreground rounded-xl shadow-xl dark:bg-foreground-dark w-full lg:w-2/3 xl:w-2/3'>
           <div className='flex flex-col p-6 space-y-4 md:space-y-6 sm:p-8 bg-red-'>
             <p className='font-light text-sm text-primary-text dark:text-primary-textDark'>Don't have an account? <b><Link to={"/signup"} className='underline text-primary dark:text-primary-dark'>Create one!</Link></b></p>
      
@@ -122,7 +121,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </section>
   )
 }
 

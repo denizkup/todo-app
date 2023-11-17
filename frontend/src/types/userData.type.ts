@@ -8,7 +8,7 @@ export const userDataType= z.object({
     name       : z.string({required_error: "NAME_REQUIRED"}).min(2).max(255),
     lastname   : z.string({required_error: "LASTNAME_REQUIRED"}).min(2).max(255),
     password   : z.string({required_error: "PASSWORD_REQUIRED"}).min(3).max(255),
-    auth_level : z.enum(AUTH_LEVELS)
+    auth_level : z.enum(AUTH_LEVELS).optional()
 });
 
 export type userDataType = z.infer<typeof userDataType>;

@@ -31,11 +31,14 @@ module.exports = {
         },
         background:{
           DEFAULT:colors.gray[50],
-          dark:'#0e1320'
+          dark2:'#0e1320',
+          dark:colors.slate[900]
         },
         foreground:{
           DEFAULT:colors.gray[50],
-          dark:'#111927'
+          darka:'#111927',
+          dark:colors.slate[800]
+
         },
         
         

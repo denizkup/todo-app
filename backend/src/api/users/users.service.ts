@@ -13,6 +13,7 @@ async function addUser(user):Promise<serviceReturn>{
         if(email_exist === null){
             user.password = await hashData.hash(user.password);
             user.create_date = getCurrentTime();
+            if(!user.auth_level) user.auth_level = "USER"
             const new_user = new User(user);
             await new_user.save();
             result.status = true;

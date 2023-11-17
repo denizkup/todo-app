@@ -15,7 +15,7 @@ export default function UserAddDialog(props: Props) {
   
   return (
     <Dialog open={open} onClose={onClose}>
-      <h2 className="text-xl">{title}</h2>
+      <h2 className="text-3xl mb-2">{title}</h2>
       <div className="py-5">{children}</div>
     </Dialog>
   );

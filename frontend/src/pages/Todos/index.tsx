@@ -1,9 +1,8 @@
 import React,{useEffect, useState,useLayoutEffect,useRef} from 'react';
-import { getTodoListService,deleteTodoService,addTodoService,updateTodoService } from '../../services/todo.service';
 import { TodoType } from '../../types/todo.type';
-import {MdDelete,MdLogout,MdSync,MdSyncProblem,MdDarkMode,MdLightMode} from 'react-icons/md';
 import {useAuth} from "../../hooks/auth.hook"
-import useChangeTheme from '../../hooks/theme.hook';
+import {MdDelete,MdSync,MdSyncProblem} from 'react-icons/md';
+import { getTodoListService,deleteTodoService,addTodoService,updateTodoService } from '../../services/todo.service';
 
 const MIN_TEXTAREA_HEIGHT = 16  ;
 
@@ -15,7 +14,6 @@ const Todos = () => {
     const textareaRef                  = useRef<HTMLTextAreaElement>(null);
     const {logout}                     = useAuth();
     const [sync,setSync]               = useState({active:false,status:true});
-    const {theme,changeTheme}          = useChangeTheme()
     
     const toggleClass = " transform translate-x-5";
 
@@ -49,26 +47,15 @@ const Todos = () => {
         }
         catch(error){
             if(error?.response?.status === 401){
-                signOut()
+                logout()
             }
             setTimeout(() => setSync((prevState) => ({...prevState,active:false,status:true})),300)
         }  
     }
 
     useEffect(()=>{
-        // console.log("userData = ",authData)
         fetchTodos() 
     },[])
-
-
-    async function signOut(){
-        try{
-            await logout()
-        }
-        catch(error){
-
-        }
-    }
 
     async function deleteTodoHandler(todo_id:string) {
         setSync((prevState) => ({...prevState,active:true}));
@@ -187,40 +174,40 @@ const Todos = () => {
     }
 
     return(
-        <div className='flex items-start justify-center h-full bg-slate-100 dark:bg-slate-900 p-5'>
-            <div className='md:w-3/4 lg:w-1/2 h-screen  border border-slate-200 rounded-lg shadow px-5 py-5 dark:border-slate-800 w-full'>
-                <div className='flex items-center justify-end space-x-1 mb-5'>
-                    <div className='flex items-center justify-center space-x-5'>
-                        <button className=" text-slate-900 dark:text-slate-100"  onClick={() => changeTheme()}>
-                            {theme === "dark" 
-                                ? 
-                                <MdDarkMode className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>
-                                :
-                                <MdLightMode className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>   
-                            }
-                        </button>
-                        <div className='flex flex-col items-center justify-center'>
-                            {sync.status ? 
-                                <button disabled={sync.active} onClick={() => fetchTodos()} className={sync.active ? "animate-spin text-slate-700 dark:text-slate-100" : "text-slate-700 dark:text-slate-100"}>
-                                    <MdSync className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>
-                                </button>
-                                :
-                                <MdSyncProblem className="text-secondary dark:text-secondary-dark xs:w-6 xs:h-6 md:w-7 md:h-7"/>
-                            }
+            <>                  
+                <p className='text-5xl xs:text-3xl text-center text-primary-text dark:text-primary-textDark'> Todos </p>
+                <div className='flex flex-row items-center justify-between'>
+                    <div className='flex flex-row items-center space-x-1 mb-4 mt-4'>
+                        <div className={"w-12 h-6 flex items-center rounded-full p-1 cursor-pointer" + (!hideCompleted ? ' bg-background-dark dark:bg-background' : ' bg-primary dark:bg-primary-dark')}
+                                onClick={() => {
+                                    setHideCompleted(current => !current)
+                                }}>
+                            <div className={"bg-background dark:bg-background-dark h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
                         </div>
-                  
-                        <button className='text-slate-900 dark:text-slate-100' onClick={() => signOut() }><MdLogout className="xs:w-6 xs:h-6 md:w-7 md:h-7" /></button>
+                        <p className='text-primary-text dark:text-primary-textDark text-xs font-light'>Hide completed todos</p>
+
+                    </div>
+                    <div className='flex flex-col items-center justify-center'>
+                        {sync.status ? 
+                            <button disabled={sync.active} onClick={() => fetchTodos()} className={sync.active ? "animate-spin text-slate-700 dark:text-slate-100" : "text-slate-700 dark:text-slate-100"}>
+                                <MdSync className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>
+                            </button>
+                            :
+                            <MdSyncProblem className="text-secondary dark:text-secondary-dark xs:w-6 xs:h-6 md:w-7 md:h-7"/>
+                        }
                     </div>
                 </div>
-                <p className='text-5xl xs:text-3xl text-center text-primary-text dark:text-primary-textDark'> Todos </p>
-                <div className='flex flex-row items-center space-x-1 mb-4 mt-4'>
-                    <div className={"w-12 h-6 flex items-center rounded-full p-1 cursor-pointer" + (!hideCompleted ? ' bg-background-dark dark:bg-background' : ' bg-primary dark:bg-primary-dark')}
-                            onClick={() => {
-                                setHideCompleted(current => !current)
-                            }}>
-                        <div className={"bg-background dark:bg-background-dark h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" + (!hideCompleted ? 'null' : toggleClass)}/>
-                    </div>
-                    <p className='text-primary-text dark:text-primary-textDark text-xs font-light'>Hide completed todos</p>
+                <div >
+                    <textarea
+                        className="text-slate-900 dark:text-slate-100 w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none text-center mt-5 
+                        caret-slate-900 dark:caret-slate-100"
+                        value={newTodo}
+                        placeholder='Add a new one ... '
+                        onChange={(e) => setNewTodo(e.target.value)}
+                        onKeyDown={(e) => {if (e.key === "Enter") onTodoAddSubmit(e)}}
+                        ref={textareaRef}
+                        disabled={sync.active}
+                    />
 
                 </div>
 
@@ -251,23 +238,10 @@ const Todos = () => {
                         )
                     }
                 })}
-                <div >
-                    <textarea
-                        className="text-slate-900 dark:text-slate-100 w-full resize-none overflow-hidden no-scrollbar bg-transparent focus:outline-none text-center mt-5 
-                        caret-slate-900 dark:caret-slate-100"
-                        value={newTodo}
-                        placeholder='Add a new one ... '
-                        onChange={(e) => setNewTodo(e.target.value)}
-                        onKeyDown={(e) => {if (e.key === "Enter") onTodoAddSubmit(e)}}
-                        ref={textareaRef}
-                        disabled={sync.active}
-                    />
+          
 
-                </div>
+            </>
 
-            </div>
-
-        </div>
     )
 }
 

@@ -16,13 +16,13 @@ export default function Dialog(props: Props) {
   }
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-transparent flex">
-      <div className="relative p-8 w-full max-w-md m-auto flex-col flex rounded-lg
-               bg-foreground dark:bg-foreground-dark shadow-2xl text-slate-500 dark:text-slate-100">
-        <div>
+      <div className="relative w-full max-w-lg m-auto flex-col flex rounded-lg
+               bg-foreground dark:bg-foreground-dark shadow-2xl text-primary-text dark:text-primary-textDark">
+        <div className="p-8">
           {props.children}
         </div>
-        <span className="absolute top-0 right-0 p-1">     
-          <button onClick={() => onClose()} className="rounded-full p-2 hover:bg-slate-400"><MdClose className="w-6 h-6"/></button>
+        <span className="absolute top-0 right-0 p-3">     
+          <button onClick={() => onClose()} className="rounded-full p-2 hover:bg-slate-400"><MdClose className="w-7 h-7"/></button>
         </span>
      </div>
    </div>

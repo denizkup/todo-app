@@ -32,9 +32,6 @@ const formSchema = Yup.object().shape({
       .max(12, "Password cannot exceed more than 12 characters")
       .oneOf([Yup.ref("password")], "Passwords do not match"),
 
-    auth_level:Yup.string()
-      .required("Auth level is requiered")
-      .oneOf(["ADMIN","USER"], "Auth level not valid!"),
 });
 
 export default function SignupForm(props:any) {
@@ -51,13 +48,12 @@ export default function SignupForm(props:any) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 p-4">
             <Input name="email" label="Email" type="email" errors={errors} register={register} required={true}/>
             <Input name="name" label="Name" type="text" errors={errors} register={register} required={true}/>
             <Input name="lastname" label="Lastname" type="text" errors={errors} register={register} required={true}/>
             <Input name="password" label="Password" type="password" errors={errors} register={register} required={true}/>
             <Input name="cpassword" label="Password Confirm" type="password" errors={errors} register={register} required={true}/>
-            <Select name="auth_level" label="Auth Level" errors={errors} register={register} required={true} options={[{value:"USER",name:"User"},{value:"ADMIN",name:"Administrator"}]}/>
             <Button type="submit" disabled={Object.keys(errors).length > 0}>
                 Signup
             </Button> 

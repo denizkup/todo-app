@@ -51,7 +51,7 @@ export default function UserAddForm(props:any) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 px-5">
             <Input name="email" label="Email" type="email" errors={errors} register={register} required={true}/>
             <Input name="name" label="Name" type="text" errors={errors} register={register} required={true}/>
             <Input name="lastname" label="Lastname" type="text" errors={errors} register={register} required={true}/>

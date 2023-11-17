@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { addUserService, deleteUserService, getUserListService } from "../../services/users.service";
 import {userDataType} from "../../types/userData.type"
-import {MdPersonAddAlt1,MdDelete,MdLogout,MdDarkMode,MdLightMode} from "react-icons/md"
+import {MdPersonAddAlt1,MdDelete} from "react-icons/md"
 import ConfirmDialog from "../../components/confirmDialog";
 import UserAddDialog from "./userAddDialog";
-import {useAuth} from "../../hooks/auth.hook"
-import useChangeTheme from '../../hooks/theme.hook';
 import UserAddForm from "./userAddForm";
 
 const UserRow = ({idx,user,deleteAction}) => {
@@ -39,8 +37,6 @@ const Users = () => {
     const [sync,setSync] = useState(false)
     const [deleteUserDialog,setDeleteUserDialog] = useState<userDeleteDialogType>({open:false,user:null})
     const [addUserDialog,setAddUserDialog] = useState(false)
-    const {logout} = useAuth()
-    const {theme,changeTheme} = useChangeTheme()
 
 
 
@@ -86,65 +82,49 @@ const Users = () => {
     },[sync])
 
     return (
-        <div className='flex items-start justify-center h-full bg-slate-100 dark:bg-slate-900 p-5'>
-            <div className='md:w-3/4 lg:w-1/2 h-screen  border border-slate-200 rounded-lg shadow px-5 py-5 dark:border-slate-800 w-full'>
-                <div className='flex items-center justify-end space-x-1 mb-5'>
-                    <div className='flex items-center justify-center space-x-5'>
-                        <button className=" text-slate-900 dark:text-slate-100"  onClick={() => changeTheme()}>
-                            {theme === "dark" 
-                                ? 
-                                <MdDarkMode className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>
-                                :
-                                <MdLightMode className="xs:w-6 xs:h-6 md:w-7 md:h-7"/>   
-                            }
-                        </button>
-                        <button className="rounded-full p-1.5 hover:dark:bg-slate-500 hover:bg-slate-600 " onClick={() => setAddUserDialog(true)} >
-                            <MdPersonAddAlt1 className="text-slate-900 dark:text-slate-100 sm:w-5 sm:h-5 md:w-7 md:h-7"/>
-                        </button>
-                
-                        <button className=' rounded-full p-1.5 hover:dark:bg-slate-500 hover:bg-slate-600' onClick={() => logout() }>
-                            <MdLogout className=" text-slate-900 dark:text-slate-100 sm:w-5 sm:h-5 md:w-7 md:h-7" />
-                        </button>                    
-                    </div>
+        <>
+            <p className='text-5xl xs:text-3xl text-center text-primary-text dark:text-primary-textDark'> Users </p>
+            <div className="flex flex-col mb-4 mt-4">
+                <div className="flex flex-row justify-end mb-2">
+                    <button className="rounded-full p-1.5 hover:dark:bg-slate-500 hover:bg-slate-600 " onClick={() => setAddUserDialog(true)} >
+                        <MdPersonAddAlt1 className="text-slate-900 dark:text-slate-100 sm:w-5 sm:h-5 md:w-7 md:h-7"/>
+                    </button>
+
                 </div>
-                <p className='text-5xl xs:text-3xl text-center text-primary-text dark:text-primary-textDark'> Users </p>
-                <div className="flex flex-col mb-4 mt-4">
-                    <div className="-m-1.5 overflow-x-auto">
-                        <div className="p-1.5 min-w-full inline-block align-middle">
-                            <div className="overflow-hidden">
-                                <table className="min-w-full">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Name</th>
-                                            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Lastname</th>
-                                            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Email</th>
-                                            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Type</th>
-                                            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                        {users.map((user,idx) => {
-                                            return (
-                                                <UserRow key={idx} idx={idx} user={user} deleteAction={() => setDeleteUserDialog({open:true,user:user})}/>
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
+                <div className="-m-1.5 overflow-x-auto">
+                    <div className="p-1.5 min-w-full inline-block align-middle">
+                        <div className="overflow-hidden">
+                            <table className="min-w-full">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Name</th>
+                                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Lastname</th>
+                                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Email</th>
+                                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Type</th>
+                                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {users.map((user,idx) => {
+                                        return (
+                                            <UserRow key={idx} idx={idx} user={user} deleteAction={() => setDeleteUserDialog({open:true,user:user})}/>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <ConfirmDialog title="Delete user" open={deleteUserDialog.open} 
-                                onClose={() => setDeleteUserDialog({open:false,user:null})} 
-                                onConfirm={deleteUser}>
-                    Please confirm to delete user "{deleteUserDialog.user?.name}"
-                </ConfirmDialog>
-                <UserAddDialog title="Add user" open={addUserDialog} onClose={()=>setAddUserDialog(false)}>
-                    <UserAddForm addUserHandler={addUser}/>
-                </UserAddDialog>
-            
             </div>
-        </div>
+            <ConfirmDialog title="Delete user" open={deleteUserDialog.open} 
+                            onClose={() => setDeleteUserDialog({open:false,user:null})} 
+                            onConfirm={deleteUser}>
+                Please confirm to delete user "{deleteUserDialog.user?.name}"
+            </ConfirmDialog>
+            <UserAddDialog title="Add user" open={addUserDialog} onClose={()=>setAddUserDialog(false)}>
+                <UserAddForm addUserHandler={addUser}/>
+            </UserAddDialog>
+        </>
     )
 }
 
