@@ -1,4 +1,4 @@
-# Just an another todo-app with unnecessary features
+# Todo app with backend and user authentication
 
 Todo app's backend developed with Node.js and MongoDB, its frontend developed with React+Typescript.
 
