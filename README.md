@@ -18,6 +18,8 @@ It contains user authentication with cookies and session. Users, todos and sessi
 It has 2 authorization level 'ADMIN' and 'USER'. A user can signup with using signup page and a admin should be created manually in MongoDB document.
 Sessions are stored in MongoDB and when a user is signed in it save to the sessions document and it will be deleted when user is logged out.
 
+> Note: There is a postman configuration file, so that api can be tested.
+
 ## Scripts
 To run available scirpt
 ```bash
